@@ -4,9 +4,27 @@
 
 Easy to use app for creating qr codes for payments. Split the bill with your friends. No more calculating who owes what. Just enter the amount and the app will generate a qr code for you. Maybe track payments in the future. Show a list of payments. Maybe even order food from a restaurant.
 
+## Tech
+
+- Svelte <https://svelte.dev>
+  - Static adapter
+- Tailwind <https://tailwindcss.com>
+- Typescript <https://www.typescriptlang.org>
+- Vite <https://vitejs.dev>
+- prettier <https://prettier.io>
+- eslint <https://eslint.org>
+
+## VSCode Extensions
+
+- PostCSS Language Support
+- Tailwind CSS IntelliSense
+- Svelte for VS Code
+
 ## Tests
 
-- Playwright
+- Vitest (Unit) <https://vitest.dev>
+- Playwright (end-to-end) <https://playwright.dev>
+- Github workflows testing <https://github.com/nektos/act>
 
 ## TODO
 
