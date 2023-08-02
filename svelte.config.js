@@ -8,7 +8,11 @@ export default {
             // these options are set automatically — see below
             pages: 'build',
             assets: 'build',
-            fallback: undefined,
+            fallback: {
+                // all unknown routes should fall back to `index.html`
+                // this is needed for SPA app
+                '/': 'index.html'
+            },
             precompress: false,
             strict: true
         })

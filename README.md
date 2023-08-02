@@ -2,7 +2,14 @@
 
 ## Info
 
+[**Production website**](https://papu.vazacdaniel.com)
+
 Easy to use app for creating qr codes for payments. Split the bill with your friends. No more calculating who owes what. Just enter the amount and the app will generate a qr code for you. Maybe track payments in the future. Show a list of payments. Maybe even order food from a restaurant.
+
+## Deployment
+
+- Tag and push to github
+- Github actions will build and deploy to production site
 
 ## Tech
 
@@ -19,6 +26,7 @@ Easy to use app for creating qr codes for payments. Split the bill with your fri
 - PostCSS Language Support
 - Tailwind CSS IntelliSense
 - Svelte for VS Code
+- Playwright Test for VS Code
 
 ## Tests
 

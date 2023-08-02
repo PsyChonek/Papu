@@ -21,14 +21,21 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install playwright
-        run: npm install playwright --with-deps
-        
+      - name: Install playwright deps
+        run: npx playwright install --with-deps
+
       - name: Test
         run: npm run test
 
       - name: Build
         run: npm run build
      
-    #   - name: Deploy
+      - name: Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: vazacdaniel.com
+          local-dir: ./build/
+          server-dir: sub/papu.vazacdaniel.com/
+          username: papu@vazacdaniel.com
+          password: ${{ secrets.FTP_GITHUB_PASS }}
         
