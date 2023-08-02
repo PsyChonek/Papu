@@ -1,22 +1,38 @@
-## Developing
+# Readme
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Info
+
+Easy to use app for creating qr codes for payments. Split the bill with your friends. No more calculating who owes what. Just enter the amount and the app will generate a qr code for you. Maybe track payments in the future. Show a list of payments. Maybe even order food from a restaurant.
+
+## Tests
+
+- Playwright
+
+## TODO
+
+- [ ] Add ability to add new friend (Name, Price)
+- [ ] Generate payment qr code
+- [ ] User accounts
+- [ ] Monitor payments
+- [ ] Send qr code to user (email, text, slack, etc)
+- [ ] Pull food from Bold, Foodora, etc
+- [ ] Allow users to select food from menu
+- [ ] Order food from restaurant
+
+## Developing
 
 ```bash
 npm run dev
 
-# or start the server and open the app in a new browser tab
+# open in browser
 npm run dev -- --open
 ```
 
 ## Building
 
-To create a production version of your app:
-
 ```bash
 npm run build
+
+## Preview production build
+npm run preview
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
