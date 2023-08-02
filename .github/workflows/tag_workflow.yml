@@ -1,4 +1,4 @@
-name: CI on Tag
+name: Deploy on Tag
 
 on:
   push:
