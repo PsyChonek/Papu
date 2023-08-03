@@ -2,7 +2,7 @@
     import type { PageData } from './$types';
     import { version } from '$app/environment' 
     
-    export let data: PageData;
+    // export let data: PageData;
 </script>
 
 <h1 class="text-center font-bold text-5xl mt-10"> Papu </h1>

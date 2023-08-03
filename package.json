@@ -1,6 +1,6 @@
 {
   "name": "papu",
-  "version": "0.0.7 - 2023/08/03 12:24",
+  "version": "0.0.7 - 2023/08/03 12:50",
   "private": true,
   "scripts": {
     "appendVersionWithDate": "node ./scripts/appendVersionWithDate.js",
