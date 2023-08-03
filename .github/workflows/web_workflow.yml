@@ -29,7 +29,7 @@ jobs:
 
       - name: Build
         run: npm run build
-     
+
       - name: Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -38,4 +38,5 @@ jobs:
           server-dir: sub/papu.vazacdaniel.com/
           username: papu@vazacdaniel.com
           password: ${{ secrets.FTP_GITHUB_PASS }}
+          dangerous-clean-slate: true
         

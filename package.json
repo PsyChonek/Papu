@@ -1,7 +1,7 @@
 {
   "name": "papu",
   "author": "Daniel Vazač",
-  "version": "0.0.7 - 2023/08/03 14:57",
+  "version": "0.0.7 - 2023/08/03 15:45",
   "private": true,
   "scripts": {
     "appendVersionWithDate": "node ./scripts/appendVersionWithDate.js",
