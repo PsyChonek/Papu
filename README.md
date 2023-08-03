@@ -59,6 +59,5 @@ npm run dev -- --open
 ```bash
 npm run build
 
-## Preview production build
 npm run preview
 ```
