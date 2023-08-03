@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"copy": "cpy package.json ./build && cpy ./webroot/* ./build",
+		"copy": "cpy package.json ./build && cpy ./webroot/**/*.* ./build",
 		"build": "vite build && npm run copy",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
