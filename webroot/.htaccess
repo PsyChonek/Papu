@@ -1,0 +1,7 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/kqbweoga/sub/papu.vazacdaniel.com"
+PassengerBaseURI "/"
+PassengerNodejs "/home/kqbweoga/nodevenv/sub/papu.vazacdaniel.com/18/bin/node"
+PassengerAppType node
+PassengerStartupFile app.cjs
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
