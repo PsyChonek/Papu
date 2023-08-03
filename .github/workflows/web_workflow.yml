@@ -1,9 +1,9 @@
-name: Deploy on Tag
+name: Deploy web on merge
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 jobs:
   build:
