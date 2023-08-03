@@ -4,13 +4,24 @@
 @tailwind utilities;
 
 @layer components {
-  .btn {
-    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
-  }
+	.btn {
+		@apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+	}
 }
 
 @layer body {
-  body {
-    @apply font-quicksand;
+	body {
+		@apply font-quicksand;
+		margin: 0;
+		padding: 0;
+		height: 100%;
+    overflow:auto;
+	}
+}
+
+@layer html {
+  html {
+    height: 100%;
+    overflow:auto;
   }
 }

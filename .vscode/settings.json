@@ -1,10 +1,11 @@
 {
     "cSpell.words": [
+        "@tailwind",
+        "contentinfo",
         "Foodora",
         "Papu",
         "precompress",
-        "tailwindcss",
         "tailwind",
-        "@tailwind",
+        "tailwindcss"
     ]
 }
