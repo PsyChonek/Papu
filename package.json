@@ -1,12 +1,12 @@
 {
   "name": "papu",
   "author": "Daniel Vazač",
-  "version": "0.0.7 - 2023/08/03 15:45",
+  "version": "0.0.7 - 2023/08/03 15:52",
   "private": true,
   "scripts": {
     "appendVersionWithDate": "node ./scripts/appendVersionWithDate.js",
     "dev": "vite dev",
-    "copy": "cpy package.json ./build && cpy ./webroot/**/*.* ./build",
+    "copy": "cpy package.json build && cpy webroot/* build",
     "build": "npm run appendVersionWithDate && vite build && npm run copy",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
