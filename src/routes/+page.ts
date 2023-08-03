@@ -1,6 +1,5 @@
-/** @type {import('./$types').PageLoad} */
-export async function load() {
-    return {
-        version: 1,
-    };
-};
+import type { PageLoad } from './$types';
+
+export const load = (async () => {
+    return {};
+}) satisfies PageLoad;
