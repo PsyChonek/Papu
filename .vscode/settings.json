@@ -6,6 +6,7 @@
         "Papu",
         "precompress",
         "tailwind",
-        "tailwindcss"
+        "tailwindcss",
+        "webroot"
     ]
 }
