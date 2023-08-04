@@ -39,5 +39,9 @@
     "vite": "^4.4.2",
     "vitest": "^0.32.2"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@types/qrcode": "^1.5.1",
+    "qrcode": "^1.5.3"
+  }
 }
