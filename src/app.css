@@ -23,7 +23,7 @@
 	html {
 		height: 100vh;
 		overflow: auto;
-		background: rgb(213,255,228);
-		background: linear-gradient(90deg, rgba(213,255,228,0.5) 0%, rgba(139,232,229,0.8) 30%, rgba(152,236,229,0.8) 70%, rgba(213,255,228,0.5018382352941176) 100%);
+		background: rgb(213, 255, 228);
+		background: linear-gradient(90deg, rgba(213, 255, 228, 0.5) 0%, rgba(139, 232, 229, 0.8) calc(50% - 750px), rgba(152, 236, 229, 0.8) calc(50% + 750px), rgba(213, 255, 228, 0.5) 100%);
 	}
 }
