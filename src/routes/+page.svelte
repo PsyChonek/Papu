@@ -1,17 +1,51 @@
 <script lang="ts">
-	import QRCode from 'qrcode';
+	import CanvasQrCode from '$lib/canvasQrCode.svelte';
+	import { paymentData } from '$lib/payment';
+	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import Error from './+error.svelte';
-
-	var iban: string = '';
-	var newUserName: string = '';
-	let users: User[] = [];
 
 	interface User {
-		uniqueId: number;
 		name: string;
 		total: number;
 		nonDiscountedTotal: number;
+		qrCodeData: string | null;
+	}
+
+	let iban = '';
+	let ibanLoaded = false;
+	// In 0-100%
+	let discount = 0;
+	let other = 0;
+
+	let newUserName = '';
+	let users: User[] = [];
+
+	// update users total
+	$: {
+		const split = other / users.length;
+		users = users.map((user) => ({
+			...user,
+			// Floor discount
+			total: Math.ceil(user.nonDiscountedTotal * (1 - discount / 100)) + split
+		}));
+	}
+
+	// update total
+	const sum = (a: number, b: number) => a + b;
+	$: total = users.map((user) => user.total).reduce(sum, 0);
+	$: rawTotal = users.map((user) => user.nonDiscountedTotal).reduce(sum, 0);
+
+	// update users qrCode
+	$: {
+		users = users.map((user) => ({
+			...user,
+			qrCodeData: iban && user.total > 0 ? paymentData(iban, user.total, `Payment for ${user.name} from Papu`) : null
+		}));
+	}
+
+	// update iban in localStorage
+	$: if (browser && ibanLoaded) {
+		localStorage.setItem('iban', iban);
 	}
 
 	onMount(() => {
@@ -22,150 +56,19 @@
 		// Load iban from localStorage
 		if (localStorage.getItem('iban')) {
 			iban = localStorage.getItem('iban') as string;
-			console.log('iban loaded from localStorage');
-
-			// Update input value
-			(document.querySelector('input') as HTMLInputElement).value = iban;
+			ibanLoaded = true;
+			console.log('iban loaded from localStorage', iban);
 		}
 	};
 
-	// Input enter
-	const updateAmount = (e: any, user: any) => {
-		if (e.key === 'Enter') {
-			if (e.target.value === '') {
-				return;
-			}
+	const addUser = () => {
+		if (!newUserName) return;
 
-			// Add price to total
-			user.nonDiscountedTotal += Math.ceil(parseFloat(e.target.value));
-
-			// Clear input
-			e.target.value = '';
-
-			// Update users
-			updateUsers();
-		}
-	};
-
-	// Set IBAN
-	const setIban = (e: any) => {
-		iban = e.target.value;
-
-		// Save iban to localStorage
-		localStorage.setItem('iban', iban);
-		console.log('iban saved to localStorage');
-	};
-
-	const setUserName = (e: any) => {
-		newUserName = e.target.value;
-	};
-
-	// Generate payment
-	const generateQr = (user: any) => {
-		// https://en.wikipedia.org/wiki/Short_Payment_Descriptor
-
-		// Generate QR code content
-		const qr = `SPD*1.0*ACC:${iban}*AM:${user.total}*CC:CZK*MSG:Payment for ${user.name} from Papu`;
-
-		// Log QR code content
-		console.log(qr);
-
-		var canvas = document.getElementById('canvas-' + user.uniqueId.toString()) as HTMLCanvasElement;
-
-		// Check if canvas exists
-		if (!canvas) {
-			console.log('canvas not found');
-			return;
-		}
-
-		// Clear canvas
-		var ctx = canvas.getContext('2d');
-		ctx?.clearRect(0, 0, canvas.width, canvas.height);
-
-		// Generate QR code into variable NOT CANVAS
-		var qrCode = QRCode.toDataURL(qr, {
-			errorCorrectionLevel: 'H',
-			color: {
-				dark: '#000000', // Black dots
-				light: '#0000' // Transparent background
-			},
-			width: 200
-		});
-
-		// Set QR code to canvas
-		qrCode.then((url) => {
-			var img = new Image();
-			img.src = url;
-			img.onload = () => {
-				var ctx = canvas.getContext('2d');
-				ctx?.drawImage(img, 0, 0);
-			};
-		});
-	};
-
-	const addUser = (name: string) => {
-		var user = { name: name, total: 0, uniqueId: Math.floor(Math.random() * 1000000), nonDiscountedTotal: 0 };
-
-		users.push(user);
+		const user = { name: newUserName, total: 0, nonDiscountedTotal: 0, qrCodeData: null };
+		users = [...users, user];
 
 		// Clear input field
-		(document.getElementById('user-name') as HTMLInputElement).value = '';
-
-		updateUsers();
-	};
-
-	var total = 0;
-
-	const updateTotal = () => {
-		total = 0;
-
-		users.forEach((user) => {
-			total += user.total;
-		});
-	};
-
-	const setDiscount = (e: any) => {
-		discount = e.target.value;
-		updateUsers();
-	};
-
-	// In 0-100%
-	var discount = 0;
-
-	// Update users total with discount
-	const applyDiscount = () => {
-		users.forEach((user) => {
-			// Floor discount
-			user.total = Math.ceil(user.nonDiscountedTotal - (user.nonDiscountedTotal / 100) * discount);
-		});
-	};
-
-	const setOther = (e: any) => {
-		other = e.target.value;
-		updateUsers();
-	};
-
-	var other = 0;
-
-	// Update users total with other
-	const applyOther = () => {
-		users.forEach((user) => {
-			var split = other / users.length;
-			user.total += split;
-		});
-	};
-
-	// Update users
-	const updateUsers = () => {
-		applyDiscount();
-		applyOther();
-		updateTotal();
-
-		users.forEach((user) => {
-			generateQr(user);
-		});
-
-		users = [...users];
+		newUserName = '';
 	};
 </script>
 
@@ -175,23 +78,23 @@
 	<div class="flex flex-col gap-6 m-2">
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">IBAN</h1>
-			<input type="text" placeholder="IBAN" on:change={setIban} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<input type="text" placeholder="IBAN" bind:value={iban} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">Discount</h1>
-			<input type="number" placeholder="Discount" on:change={setDiscount} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<input type="number" min="0" max="100" placeholder="Discount" bind:value={discount} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">Other</h1>
-			<input type="number" placeholder="Other" on:change={setOther} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<input type="number" placeholder="Other" bind:value={other} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<p class="font-bold mr-auto text-2xl">Total</p>
-			<input id="input-total" type="text" disabled placeholder="Total" value={total} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<input type="text" disabled placeholder="Total" value={total} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<p class="font-bold mr-auto text-2xl">Raw</p>
-			<input id="input-total" type="text" disabled placeholder="Total" value={total / ((100 - discount)/100)} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<input type="text" disabled placeholder="Total" value={rawTotal} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 		</div>
 	</div>
 </div>
@@ -203,19 +106,12 @@
 			<div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
 				<h1 class="font-bold text-lg">{user.name}</h1>
 				<h1>{user.total}</h1>
-				<input
-					type="number"
-					placeholder="Price"
-					on:keypress={(e) => {
-						updateAmount(e, user);
-					}}
-					class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
-				/>
+				<input bind:value={user.nonDiscountedTotal} type="number" placeholder="Price" class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 
 				<!-- Rounded border for canvas -->
 				<div class="rounded-lg border-2 border-gray-300">
 					<!-- QR code on load generate -->
-					<canvas width="200" height="200" id="canvas-{user.uniqueId.toString()}" />
+					<CanvasQrCode data={user.qrCodeData} />
 				</div>
 			</div>
 		{/each}
@@ -224,25 +120,16 @@
 	<div class="m-auto flex flex-col gap-2 max-w-[200px]">
 		<!-- User name input -->
 		<input
-			id="user-name"
-			on:change={setUserName}
-			on:keypress={(e) => {
-				if (e.key === 'Enter') {
-					setUserName(e);
-					addUser(newUserName);
-				}
-			}}
 			type="text"
 			placeholder="User name"
 			class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+			bind:value={newUserName}
+			on:keypress={(e) => {
+				if (e.key === 'Enter') addUser();
+			}}
 		/>
 
 		<!-- Add user button -->
-		<button
-			on:click={() => {
-				addUser(newUserName);
-			}}
-			class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">Add user</button
-		>
+		<button on:click={() => addUser()} class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">Add user</button>
 	</div>
 </div>
