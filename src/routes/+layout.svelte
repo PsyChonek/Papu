@@ -3,14 +3,14 @@
 	import Footer from '$lib/footer.svelte';
 </script>
 
-<div class="flex flex-col h-max justify-between h-screen items-center">
-	<div>
-		<h1 class="text-center font-bold text-5xl mt-10">Papu</h1>
+<div class="grid grid-rows-[auto,1fr,auto] h-screen">
+	<div class=" m-8 mx-auto">
+		<a href="/" class="text-center font-bold text-5xl">Papu</a>
 	</div>
-	<div>
+	<div class="m-8 mx-auto">
 		<slot />
 	</div>
-	<div>
+	<div class="m-5 mx-auto">
 		<Footer />
 	</div>
 </div>

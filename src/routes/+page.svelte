@@ -72,7 +72,7 @@
 	};
 </script>
 
-<div class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
+<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 	<!-- Payment info  -->
 	<!-- IBAN input -->
 	<div class="flex flex-col gap-6 m-2">
@@ -99,8 +99,7 @@
 	</div>
 </div>
 
-<div class="rounded-xl bg-gray-100 min-w-[460px] p-5 m-5">
-	<!-- Horizontal list of users -->
+<div id="users" class="rounded-xl bg-gray-100 p-5 m-2 min-w-[460px] mx-auto">
 	<div class="flex flex-row justify-center gap-5 m-2">
 		{#each users as user}
 			<div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">

@@ -12,17 +12,13 @@
 @layer body {
 	body {
 		@apply font-quicksand;
-		height: 100vh;
 		max-width: 1200px;
-		overflow: auto;
 		margin: 0 auto !important;
 	}
 }
 
 @layer html {
 	html {
-		height: 100vh;
-		overflow: auto;
 		background: rgb(213, 255, 228);
 		background: linear-gradient(90deg, rgba(213, 255, 228, 0.5) 0%, rgba(139, 232, 229, 0.8) calc(50% - 750px), rgba(152, 236, 229, 0.8) calc(50% + 750px), rgba(213, 255, 228, 0.5) 100%);
 	}
