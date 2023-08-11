@@ -16,7 +16,8 @@
     "format": "prettier --plugin-search-dir . --write .",
     "test:integration": "playwright test",
     "test:unit": "vitest",
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "db": "cd ./db && npm run dev"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
