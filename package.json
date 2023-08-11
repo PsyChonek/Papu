@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "appendVersionWithDate": "node ./scripts/appendVersionWithDate.js",
-    "dev": "vite dev",
+    "dev": "vite dev --mode dev",
     "copy": "cpy package.json build && cpy 'webroot/**/*' 'build/'",
-    "build": "npm run appendVersionWithDate && vite build && npm run copy",
+    "build": "npm run appendVersionWithDate && vite build --mode prod && npm run copy",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
@@ -43,6 +43,7 @@
   "type": "module",
   "dependencies": {
     "@types/qrcode": "^1.5.1",
+    "mongodb": "^5.7.0",
     "qrcode": "^1.5.3"
   }
 }

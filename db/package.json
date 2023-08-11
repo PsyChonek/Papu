@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "node localDB.js"
   },
-  "dependencies": {
-    "js-yaml": "^4.1.0",
-    "mongodb": "^5.7.0"
+  "devDependencies": {
+    "js-yaml": "^4.1.0"
   }
 }
