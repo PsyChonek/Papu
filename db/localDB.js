@@ -1,3 +1,9 @@
+import yaml from 'js-yaml';
+import fs from 'fs';
+import { execSync } from 'child_process';
+import { exit } from 'process';
+import { MongoClient } from 'mongodb';
+
 // Settings for local database
 const UserName = 'papuadmin';
 const UserPass = 'papuadmin';
@@ -6,15 +12,7 @@ const DBName = 'papu';
 const sampleFolder = './sample';
 const containerName = 'papu-mongo';
 
-// Edit docker-compose.yml file to change ports and login credentials
-const yaml = require('js-yaml');
-const fs = require('fs');
-
-
 // Check if docker is running
-const { execSync } = require('node:child_process');
-const { exit } = require('node:process');
-
 try {
     execSync('docker info');
 } catch (error) {
@@ -35,10 +33,10 @@ try {
     execSync(`docker stop ${containerName}`);
     execSync(`docker rm ${containerName}`);
 } catch (error) {
-    console.log('Container is not running!');
+    console.log('Error while stopping container! Its okay if its first time running this script!');
 }
 
-// Prep docker-compose.yml
+// Edit docker-compose.yml file to change ports and login credentials
 const file = yaml.load(fs.readFileSync('./docker-compose.yml', 'utf8'));
 
 file.services.mongo.ports = [PORTS];
@@ -50,33 +48,35 @@ file.services.mongo.container_name = containerName;
 fs.writeFileSync('./docker-compose.yml', yaml.dump(file), 'utf8');
 
 // Start docker-compose
-const exec = require('node:child_process').exec;
-exec("docker compose up");
+execSync("docker compose up");
  
 // Try if container is running
 let tries = 3;
 let timeout = 1000;
 
-let interval = setInterval(() => {
+for (let i = 0; i < tries; i++) {
     try {
         execSync(`docker exec ${containerName} mongo --eval "printjson(db.serverStatus())"`);
-        clearInterval(interval);
+        break;
 
     } catch (error) {
-        tries++;
+        // wait 
+        console.log('Container is not running! Tries left: ' + tries);
+        setTimeout(() => { }, timeout);
+
+        tries--;
         if (tries <= 0) {
             console.log('Container is not running!');
-            clearInterval(interval);
+            exit();
         }
     }
-}, timeout);
+}
 
 console.log('Database started!');
 
 // Seed DB with sample data
 
 // Open database connection
-const MongoClient = require("mongodb").MongoClient;
 
 // Connection URL
 const url = `mongodb://${UserName}:${UserPass}@localhost:${PORTS.split(':')[0]}/?authMechanism=DEFAULT`;
@@ -92,7 +92,6 @@ async function dbConnect() {
     const dbo = db.db(DBName);
 
     // Create collections
-    const fs = require('fs');
     fs.readdir(sampleFolder, (err, files) => {
         if (err) throw err;
 
