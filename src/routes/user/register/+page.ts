@@ -1,13 +1,12 @@
-import type { PageLoad } from './user/register/$types';
+import type { PageLoad } from "./$types";
 
 export const load = (async () => {
     return {};
 }) satisfies PageLoad;
 
-export interface Form {
+export interface RegisterForm {
     username: string;
     password: string;
     passwordConfirm: string;
     email: string;
-    error?: string;
 }
