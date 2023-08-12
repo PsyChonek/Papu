@@ -48,8 +48,9 @@ file.services.mongo.container_name = containerName;
 fs.writeFileSync('./docker-compose.yml', yaml.dump(file), 'utf8');
 
 // Start docker-compose
-execSync("docker compose up");
- 
+console.log('Starting database...');
+execSync('docker-compose up -d');
+
 // Try if container is running
 let tries = 3;
 let timeout = 1000;
@@ -85,7 +86,7 @@ console.log('Connecting to database...');
 
 // Connect to local db
 async function dbConnect() {
-    db = await MongoClient.connect(url, { useUnifiedTopology: true });
+    let db = await MongoClient.connect(url, { useUnifiedTopology: true });
     console.log('Connected to database!');
 
     // Create database
@@ -110,6 +111,11 @@ async function dbConnect() {
         });
 
         console.log('Sample data inserted!');
+
+        // Close connection
+        db.close();
+
+        exit();
     });
 };
 
