@@ -17,20 +17,6 @@
 		<!-- Form -->
 		<form
 			method="post"
-			use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-				// Before form submission to server
-
-				return async ({ result, update }) => {
-
-					if (result.type === 'error') {
-						await applyAction(result);
-					}
-
-					console.log('result', result);
-
-					update()
-				};
-			}}
 			action="?/register"
 			class="flex flex-col gap-6 m-2"
 		>
