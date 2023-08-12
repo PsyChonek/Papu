@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ActionData } from './$types.js';
-	import { enhance, applyAction } from '$app/forms';
+	import { enhance, applyAction} from '$app/forms';
 
 	export let form: ActionData;
 </script>
@@ -19,6 +19,18 @@
 			method="post"
 			action="?/register"
 			class="flex flex-col gap-6 m-2"
+			use:enhance={({formData}) => {
+				return async ({ result, update }) => {
+					if (result.type === 'success') {
+						// Redirect to login
+						window.location.href = './login';
+					}
+
+					console.log(result);
+					applyAction(result);
+					update();
+				};
+			}}
 		>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<h1 class="font-bold mr-auto text-2xl">Username</h1>
