@@ -77,7 +77,7 @@
 	<div class="flex flex-col gap-6 m-2">
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">IBAN</h1>
-			<input type="text" placeholder="IBAN" bind:value={iban} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<input type="text" placeholder="IBAN" bind:value={iban} class="text-center w-60 rounded-lg p-2 border-2 {iban.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">Discount</h1>
@@ -128,6 +128,6 @@
 		/>
 
 		<!-- Add participant button -->
-		<button on:click={() => addParticipant()} class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">Add participant</button>
+		<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-orange-500 text-white p-2 disabled:bg-orange-200">Add participant</button>
 	</div>
 </div>
