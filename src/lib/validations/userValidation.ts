@@ -1,45 +1,64 @@
 import type { RegisterForm } from "../../routes/user/register/+page";
+import type { Validation, ValidationError } from "../types/validation";
 
 export const validateRegisterForm = (input: RegisterForm) => {
-    var errors :string[] = [];
+    var validation : Validation = {
+        errors: [],
+        isValid: true
+    };
 
-    errors = errors.concat(validateUsername(input.username));
-    errors = errors.concat(validatePassword(input.password, input.passwordConfirm));
-    errors = errors.concat(validateEmail(input.email));
+    validation.errors.push(...validateUsername(input.username));
+    validation.errors.push(...validatePassword(input.password, input.passwordConfirm));
+    validation.errors.push(...validateEmail(input.email));
 
-    return errors;
+    if (validation.errors.length > 0) {
+        validation.isValid = false;
+    }
+
+    return validation;
 }
 
 // Valid username
 const validateUsername = (username: string) => {
-    var errors :string[] = [];
+    var errors :ValidationError[] = [];
 
     // Check if username is to short
     if (username.length < 4) {
-        errors.push('Username is to short');
+        errors.push({
+            text: 'Username is to short',
+            type: 'username'
+        })
     }
 
     // Check if username is to long
     if (username.length > 20) {
-        errors.push('Username is to long');
+        errors.push({
+            text: 'Username is to long',
+            type: 'username'
+        })
     }
-
     return errors;
 }
 
 // TODO: Valid password complexity
 // Valid password
 const validatePassword = (password: string, passwordConfirm: string) => {
-    var errors :string[] = [];
+    var errors :ValidationError[] = [];
 
     // Check if password and passwordConfirm match
     if (password !== passwordConfirm) {
-        errors.push('Passwords do not match');
+        errors.push({
+            text: 'Passwords do not match',
+            type: 'passwordMatch'
+        })
     }
 
     // Check if password is to short
     if (password.length < 8) {
-        errors.push('Password is to short');
+        errors.push({
+            text: 'Password is to short',
+            type: 'password'
+        })
     }
 
     return errors;
@@ -48,11 +67,14 @@ const validatePassword = (password: string, passwordConfirm: string) => {
 // TODO: Valid email
 // Valid email
 const validateEmail = (email: string) => {
-    var errors :string[] = [];
+    var errors :ValidationError[] = [];
 
     // Check if email is valid
     if (!email.includes('@')) {
-        errors.push('Email is not valid');
+        errors.push({
+            text: 'Email is not valid',
+            type: 'email'
+        })
     }
 
     return errors;

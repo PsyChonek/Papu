@@ -3,6 +3,7 @@ import type { RegisterForm } from './+page';
 import { validateRegisterForm } from '$lib/validations/userValidation';
 
 import { fail, redirect } from '@sveltejs/kit';
+import type { Validation } from '$lib/types/validation';
 
 export const actions = {
 	register: async ({ request }) => {
@@ -16,15 +17,11 @@ export const actions = {
 			email: formData.get('email') as string
 		};
 
-		var errors :string[] = [];
-
-		console.log(input);
-
 		// Validate input data
-		errors = errors.concat(validateRegisterForm(input));
+		var clientValidation : Validation = validateRegisterForm(input);
 
-		if (errors.length > 0) {
-			return fail(422, { errors: errors, data: input });
+		if (!clientValidation.isValid) {
+			return fail(422, { data: input });
 		}
 		
 		// Check if user already exists
@@ -33,11 +30,7 @@ export const actions = {
 
 		// Create user
 
-		// Throw error if there are any
-		if (errors.length > 0) {
-			return fail(422, { errors: errors, data: input });
-		}
-		
+	
 		// Redirect to login page
 		throw redirect(303, '/login');
 	}

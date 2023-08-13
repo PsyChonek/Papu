@@ -10,3 +10,5 @@ export interface RegisterForm {
     passwordConfirm: string;
     email: string;
 }
+
+export const prerender = false;
