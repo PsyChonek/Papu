@@ -17,14 +17,8 @@ const versionWithoutDate = version.split(' - ')[0];
 // Append date to version
 const versionWithDate = `${versionWithoutDate} - ${date}`;
 
-// Update package.json version
-packageJson.version = versionWithDate;
-
-// Write package.json
-fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
-
-// Write version to .env
-fs.writeFileSync('./.env', `REACT_APP_VERSION=${versionWithDate}`);
+// Update .env version
+fs.writeFileSync('./.env', `PUBLIC_APP_VERSION=${versionWithDate}`);
 
 // Log version
 console.log(`versionWithDate: ${versionWithDate}`);

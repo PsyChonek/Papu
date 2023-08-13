@@ -7,33 +7,33 @@ import { MongoClient } from 'mongodb';
 // Settings for local database
 const UserName = 'papuadmin';
 const UserPass = 'papuadmin';
-const PORTS = "27017:27017";
+const PORTS = '27017:27017';
 const DBName = 'papu';
 const sampleFolder = './sample';
 const containerName = 'papu-mongo';
 
 // Check if docker is running
 try {
-    execSync('docker info');
+	execSync('docker info');
 } catch (error) {
-    console.log('Docker is not running!');
-    exit();
+	console.log('Docker is not running!');
+	exit();
 }
 
 // Check if docker-compose is running
 try {
-    execSync('docker-compose --version');
+	execSync('docker-compose --version');
 } catch (error) {
-    console.log('Docker-compose is not installed!');
-    exit();
+	console.log('Docker-compose is not installed!');
+	exit();
 }
 
 // Check if container is not already running if so stop and remove it
 try {
-    execSync(`docker stop ${containerName}`);
-    execSync(`docker rm ${containerName}`);
+	execSync(`docker stop ${containerName}`);
+	execSync(`docker rm ${containerName}`);
 } catch (error) {
-    console.log('Error while stopping container! Its okay if its first time running this script!');
+	console.log('Error while stopping container! Its okay if its first time running this script!');
 }
 
 // Edit docker-compose.yml file to change ports and login credentials
@@ -56,21 +56,20 @@ let tries = 3;
 let timeout = 1000;
 
 for (let i = 0; i < tries; i++) {
-    try {
-        execSync(`docker exec ${containerName} mongo --eval "printjson(db.serverStatus())"`);
-        break;
+	try {
+		execSync(`docker exec ${containerName} mongo --eval "printjson(db.serverStatus())"`);
+		break;
+	} catch (error) {
+		// wait
+		console.log('Container is not running! Tries left: ' + tries);
+		setTimeout(() => {}, timeout);
 
-    } catch (error) {
-        // wait 
-        console.log('Container is not running! Tries left: ' + tries);
-        setTimeout(() => { }, timeout);
-
-        tries--;
-        if (tries <= 0) {
-            console.log('Container is not running!');
-            exit();
-        }
-    }
+		tries--;
+		if (tries <= 0) {
+			console.log('Container is not running!');
+			exit();
+		}
+	}
 }
 
 console.log('Database started!');
@@ -86,37 +85,46 @@ console.log('Connecting to database...');
 
 // Connect to local db
 async function dbConnect() {
-    let db = await MongoClient.connect(url, { useUnifiedTopology: true });
-    console.log('Connected to database!');
+	let db = await MongoClient.connect(url, { useUnifiedTopology: true });
+	console.log('Connected to database!');
 
-    // Create database
-    const dbo = db.db(DBName);
+	// Create database
+	const dbo = db.db(DBName);
 
-    // Create collections
-    fs.readdir(sampleFolder, (err, files) => {
-        if (err) throw err;
+	if (!fs.existsSync(sampleFolder)) {
+		console.log('Sample data folder exists!');
 
-        files.forEach(file => {
-            console.log(file);
-            const collectionName = file.split('.')[1];
-            col = dbo.collection(collectionName);
-            console.log(`Collection ${col.collectionName} created!`);
+		// Close connection
+		db.close();
 
-            data = fs.readFileSync(`${sampleFolder}/${file}`, 'utf8');
-            data = data.replace("$oid", "oid");
+		exit();
+	} else {
+		// Create collections
+		fs.readdir(sampleFolder, (err, files) => {
+			if (err) throw err;
 
-            json = JSON.parse(data);
+			files.forEach((file) => {
+				console.log(file);
+				const collectionName = file.split('.')[1];
+				col = dbo.collection(collectionName);
+				console.log(`Collection ${col.collectionName} created!`);
 
-            col.updateMany(json);
-        });
+				data = fs.readFileSync(`${sampleFolder}/${file}`, 'utf8');
+				data = data.replace('$oid', 'oid');
 
-        console.log('Sample data inserted!');
+				json = JSON.parse(data);
 
-        // Close connection
-        db.close();
+				col.updateMany(json);
+			});
 
-        exit();
-    });
-};
+			console.log('Sample data inserted!');
+
+			// Close connection
+			db.close();
+
+			exit();
+		});
+	}
+}
 
 dbConnect();

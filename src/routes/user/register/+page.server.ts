@@ -4,6 +4,10 @@ import { validateRegisterForm } from '$lib/validations/userValidation';
 
 import { fail, redirect } from '@sveltejs/kit';
 import type { Validation } from '$lib/types/validation';
+import { Database } from '$lib/server/database';
+import type { User } from '$lib/types/user';
+
+import crypto from 'crypto';
 
 export const actions = {
 	register: async ({ request }) => {
@@ -23,14 +27,35 @@ export const actions = {
 		if (!clientValidation.isValid) {
 			return fail(422, { data: input });
 		}
+
+		const collection = Database.client.db('papu').collection('users');
 		
 		// Check if user already exists
+		collection.findOne({$or:[{username:input.username},{email:input.email}]}).then((result) => {
+			if (result) {
+				return fail(422, { data: input });
+			}
+		});
 
-		// Check if email is taken
+		var salt = crypto.randomBytes(16).toString('hex');
+		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
 
-		// Create user
+		var user : User = {
+			username: input.username,
+			email: input.email,
+			salt: salt,
+			hash: hash,
+		};
 
-	
+		// Insert user into database
+		collection.insertOne(user).then((result) => {
+			if (!result) {
+				return fail(422, { data: input });
+			}
+
+			console.log('User created');
+		});
+
 		// Redirect to login page
 		throw redirect(303, '/login');
 	}
