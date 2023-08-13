@@ -1,1 +1,3 @@
-// place files you want to import through the `$lib` alias in this folder.
+export const defaultDigits = 2;
+
+export const formatFloat = (x: number, digits = defaultDigits) => Number(x).toFixed(digits);
