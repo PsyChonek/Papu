@@ -5,9 +5,9 @@
 */
 
 export interface Participant {
+    id: string,
     user: User | null;
     name: string;
     total: number;
     nonDiscountedTotal: number;
-    qrCodeData: string | null;
 }
