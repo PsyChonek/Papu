@@ -1,9 +1,10 @@
 <script lang="ts">
-	import CanvasQrCode from '$lib/canvasQrCode.svelte';
-	import { paymentData } from '$lib/payment';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import type { Participant } from '$lib/types/participant';
+	import ParticipantInfo from '$lib/participantInfo.svelte';
+	import MutantTransition from '$lib/animation/mutantTransition.svelte';
+	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
 
 	let iban = '';
 	let ibanLoaded = false;
@@ -28,14 +29,6 @@
 	$: total = participants.map((participant) => participant.total).reduce(sum, 0);
 	$: rawTotal = participants.map((participant) => participant.nonDiscountedTotal).reduce(sum, 0);
 
-	// update participants qrCode
-	$: {
-		participants = participants.map((participant) => ({
-			...participant,
-			qrCodeData: iban && participant.total > 0 ? paymentData(iban, participant.total, `Payment for ${participant.name} from Papu`) : null
-		}));
-	}
-
 	// update iban in localStorage
 	$: if (browser && ibanLoaded) {
 		localStorage.setItem('iban', iban);
@@ -58,10 +51,10 @@
 		if (!newParticipantName) return;
 
 		const participant: Participant = {
+			id: crypto.randomUUID(),
 			name: newParticipantName,
 			total: 0,
 			nonDiscountedTotal: 0,
-			qrCodeData: null,
 			user: null
 		};
 		participants = [...participants, participant];
@@ -89,29 +82,25 @@
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<p class="font-bold mr-auto text-2xl">Total</p>
-			<input type="text" disabled placeholder="Total" value={total} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">
+				<FunkyNumber value={total} />
+			</div>
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<p class="font-bold mr-auto text-2xl">Raw</p>
-			<input type="text" disabled placeholder="Total" value={rawTotal} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+			<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">
+				<FunkyNumber value={rawTotal} />
+			</div>
 		</div>
 	</div>
 </div>
 
 <div id="participants" class="rounded-xl bg-gray-100 p-5 m-2 min-w-[460px] mx-auto">
 	<div class="flex flex-row justify-center gap-5 m-2">
-		{#each participants as participant}
-			<div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
-				<h1 class="font-bold text-lg">{participant.name}</h1>
-				<h1>{participant.total}</h1>
-				<input bind:value={participant.nonDiscountedTotal} type="number" placeholder="Price" class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
-
-				<!-- Rounded border for canvas -->
-				<div class="rounded-lg border-2 border-gray-300">
-					<!-- QR code on load generate -->
-					<CanvasQrCode data={participant.qrCodeData} />
-				</div>
-			</div>
+		{#each participants as { id, name, total, nonDiscountedTotal } (id)}
+			<MutantTransition>
+				<ParticipantInfo {iban} {name} {total} bind:nonDiscountedTotal />
+			</MutantTransition>
 		{/each}
 	</div>
 

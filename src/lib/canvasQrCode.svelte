@@ -3,7 +3,7 @@
 	import { afterUpdate, onMount } from 'svelte';
 
 	export let size = 200;
-	export let data: string | null = null;
+	export let data: string | null;
 
 	let canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D;
 
@@ -11,10 +11,13 @@
 		ctx = canvas.getContext('2d')!;
 	});
 
-	afterUpdate(async () => {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	const clear = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		if (!data) return;
+	afterUpdate(async () => {
+		if (!data) {
+			clear();
+			return;
+		}
 
 		// Generate QR code into variable NOT CANVAS
 		const qrCodeBase64Url = await QRCode.toDataURL(data, {
@@ -29,6 +32,8 @@
 		const img = new Image();
 		img.src = qrCodeBase64Url;
 		img.onload = () => {
+			// clear just before redraw to prevent image flashing
+			clear();
 			ctx.drawImage(img, 0, 0);
 		};
 	});
