@@ -11,15 +11,7 @@
 	let newParticipantName = '';
 	let participants: Participant[] = [];
 
-	// update participants total
-	$: {
-		const split = other / participants.length;
-		participants = participants.map((participant) => ({
-			...participant,
-			// Floor discount
-			total: Math.ceil(participant.nonDiscountedTotal * (1 - discount / 100)) + split
-		}));
-	}
+	$: split = other / participants.length;
 
 	// update total
 	const sum = (a: number, b: number) => a + b;
@@ -76,9 +68,9 @@
 
 <div id="participants" class="rounded-xl bg-gray-100 p-5 m-2 min-w-[460px] mx-auto">
 	<div class="flex flex-row justify-center gap-5 m-2">
-		{#each participants as { id, name, total, nonDiscountedTotal } (id)}
+		{#each participants as participant (participant.id)}
 			<MutantTransition>
-				<ParticipantInfo {name} {total} bind:nonDiscountedTotal />
+				<ParticipantInfo bind:participant {discount} {split} />
 			</MutantTransition>
 		{/each}
 	</div>
