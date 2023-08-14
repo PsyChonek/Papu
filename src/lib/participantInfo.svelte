@@ -2,14 +2,14 @@
 	import { paymentData } from './payment';
 	import CanvasQrCode from './canvasQrCode.svelte';
 	import FunkyNumber from './animation/funkyNumber.svelte';
+	import { iban } from '$lib/stores';
 
-	export let iban: string;
 	export let name: string;
 
 	export let nonDiscountedTotal: number;
 	export let total: number;
 
-	$: qrCodeData = iban && total > 0 ? paymentData(iban, total, `Payment for ${name} from Papu`) : null;
+	$: qrCodeData = $iban && total > 0 ? paymentData($iban, total, `Payment for ${name} from Papu`) : null;
 </script>
 
 <div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">

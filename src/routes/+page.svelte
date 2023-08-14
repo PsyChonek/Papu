@@ -1,13 +1,10 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
 	import type { Participant } from '$lib/types/participant';
+	import { iban } from '$lib/stores';
 	import ParticipantInfo from '$lib/participantInfo.svelte';
 	import MutantTransition from '$lib/animation/mutantTransition.svelte';
 	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
 
-	let iban = '';
-	let ibanLoaded = false;
 	let discount = 0; // In 0-100%
 	let other = 0;
 
@@ -28,24 +25,6 @@
 	const sum = (a: number, b: number) => a + b;
 	$: total = participants.map((participant) => participant.total).reduce(sum, 0);
 	$: rawTotal = participants.map((participant) => participant.nonDiscountedTotal).reduce(sum, 0);
-
-	// update iban in localStorage
-	$: if (browser && ibanLoaded) {
-		localStorage.setItem('iban', iban);
-	}
-
-	onMount(() => {
-		loadIban();
-	});
-
-	const loadIban = () => {
-		// Load iban from localStorage
-		if (localStorage.getItem('iban')) {
-			iban = localStorage.getItem('iban') as string;
-			ibanLoaded = true;
-			console.log('iban loaded from localStorage', iban);
-		}
-	};
 
 	const addParticipant = () => {
 		if (!newParticipantName) return;
@@ -70,7 +49,7 @@
 	<div class="flex flex-col gap-6 m-2">
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">IBAN</h1>
-			<input type="text" placeholder="IBAN" bind:value={iban} class="text-center w-60 rounded-lg p-2 border-2 {iban.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-orange-500 focus:outline-none" />
+			<input type="text" placeholder="IBAN" bind:value={$iban} class="text-center w-60 rounded-lg p-2 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">Discount</h1>
@@ -99,7 +78,7 @@
 	<div class="flex flex-row justify-center gap-5 m-2">
 		{#each participants as { id, name, total, nonDiscountedTotal } (id)}
 			<MutantTransition>
-				<ParticipantInfo {iban} {name} {total} bind:nonDiscountedTotal />
+				<ParticipantInfo {name} {total} bind:nonDiscountedTotal />
 			</MutantTransition>
 		{/each}
 	</div>
