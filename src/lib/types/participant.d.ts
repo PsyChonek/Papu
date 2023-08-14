@@ -5,9 +5,16 @@
 */
 
 export interface Participant {
-    id: string,
-    user: User | null;
-    name: string;
-    total: number;
-    nonDiscountedTotal: number;
+	id: string;
+	user: User | null;
+	name: string;
+	items: ParticipantItem[];
+	total: number;
+	nonDiscountedTotal: number;
+}
+
+/* ParicipantItem, represents an item in the participant's order  */
+export interface ParticipantItem {
+	id: String;
+	price?: number | null;
 }

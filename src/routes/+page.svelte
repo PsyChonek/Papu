@@ -4,6 +4,7 @@
 	import ParticipantInfo from '$lib/participantInfo.svelte';
 	import MutantTransition from '$lib/animation/mutantTransition.svelte';
 	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
+	import { arraySum } from '$lib';
 
 	let discount = 0; // In 0-100%
 	let other = 0;
@@ -14,9 +15,8 @@
 	$: split = other / participants.length;
 
 	// update total
-	const sum = (a: number, b: number) => a + b;
-	$: total = participants.map((participant) => participant.total).reduce(sum, 0);
-	$: rawTotal = participants.map((participant) => participant.nonDiscountedTotal).reduce(sum, 0);
+	$: total = arraySum(participants.map((participant) => participant.total));
+	$: rawTotal = arraySum(participants.map((participant) => participant.nonDiscountedTotal));
 
 	const addParticipant = () => {
 		if (!newParticipantName) return;
@@ -26,7 +26,8 @@
 			name: newParticipantName,
 			total: 0,
 			nonDiscountedTotal: 0,
-			user: null
+			user: null,
+			items: []
 		};
 		participants = [...participants, participant];
 
