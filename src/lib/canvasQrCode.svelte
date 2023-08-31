@@ -24,7 +24,7 @@
 			errorCorrectionLevel: 'H',
 			color: {
 				dark: '#000000', // Black dots
-				light: '#0000' // Transparent background
+				light: '#f3f4f6' // Transparent background
 			},
 			width: size
 		});

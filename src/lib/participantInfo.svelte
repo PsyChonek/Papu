@@ -44,7 +44,7 @@
 	{/each}
 
 	<!-- Rounded border for canvas -->
-	<div class="rounded-lg border-2 border-gray-300">
+	<div class="outline outline-orange-200  outline-offset-0 rounded-xl">
 		<!-- QR code on load generate -->
 		<CanvasQrCode data={qrCodeData} />
 	</div>
