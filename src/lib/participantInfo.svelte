@@ -29,7 +29,7 @@
 	// update nonDiscountedTotal from items
 	$: participant.nonDiscountedTotal = arraySum(participant.items.map((item) => item.price ?? 0));
 	// update total from nonDiscountedTotal, discount and split
-	$: participant.total =participant.nonDiscountedTotal * (1 - discount / 100) + split;
+	$: participant.total =Math.ceil(  participant.nonDiscountedTotal * (1 - discount / 100) + split);
 	// update qrCode from total
 	$: qrCodeData = $iban && participant.total > 0 ? paymentData($iban, participant.total, `Payment for ${participant.name} from Papu`) : null;
 </script>
