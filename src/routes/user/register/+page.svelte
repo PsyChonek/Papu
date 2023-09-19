@@ -10,10 +10,11 @@
 		username: '',
 		email: '',
 		password: '',
-		passwordConfirm: ''
+		passwordConfirm: '',
 	};
 
 	$: validation = validateRegisterForm(inputForm);
+
 </script>
 
 <div id="main">

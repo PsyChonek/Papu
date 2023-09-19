@@ -5,10 +5,10 @@ export const load = (async () => {
 }) satisfies PageLoad;
     
 export interface RegisterForm {
-    username: string;
-    password: string;
-    passwordConfirm: string;
-    email: string;
+    username?: string;
+    password?: string;
+    passwordConfirm?: string;
+    email?: string;
 }
 
 export const prerender = false;
