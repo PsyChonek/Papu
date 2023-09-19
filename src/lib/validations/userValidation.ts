@@ -39,10 +39,9 @@ export const validateLoginForm = (input: LoginForm) => {
 // Valid username
 const validateUsername = (username: string) => {
 	var errors: ValidationError[] = [];
-    console.log(username);
-    if (username.length === 0) {
-        return errors;
-    }
+	if (username.length === 0) {
+		return errors;
+	}
 
 	// Check if username is to short
 	if (username.length < 4) {
@@ -66,6 +65,9 @@ const validateUsername = (username: string) => {
 // Valid password
 const validatePassword = (password: string, passwordConfirm: string) => {
 	var errors: ValidationError[] = [];
+	if (password.length === 0) {
+		return errors;
+	}
 
 	// Check if password and passwordConfirm match
 	if (password !== passwordConfirm) {
@@ -90,6 +92,9 @@ const validatePassword = (password: string, passwordConfirm: string) => {
 // Valid email
 const validateEmail = (email: string) => {
 	var errors: ValidationError[] = [];
+	if (email.length === 0) {
+		return errors;
+	}
 
 	// Check if email is valid
 	if (!email.includes('@')) {
