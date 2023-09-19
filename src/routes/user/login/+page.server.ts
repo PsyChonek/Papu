@@ -4,6 +4,10 @@ import { validateLoginForm } from '$lib/validations/userValidation';
 
 import { fail, redirect } from '@sveltejs/kit';
 import type { Validation } from '$lib/types/validation';
+import { Database } from '$lib/server/database';
+import type { User } from '$lib/types/user';
+
+import crypto from 'crypto';
 
 export const actions = {
 	register: async ({ request }) => {
@@ -22,9 +26,26 @@ export const actions = {
 			return fail(422, { data: input });
 		}
 
-        // TODO: Login user
+		// Connect to database
+		const collection = Database.client.db('papu').collection('users');
 
-		// Redirect to login page
-		throw redirect(303, '/');
+		// Find user with same username
+		var user: User | null = await collection.findOne({ username: input.username }) as User | null;
+		if (user == null) {
+			return fail(422, { data: input });
+		}
+
+		// Check if password is correct
+		var hash = crypto.pbkdf2Sync(input.password, user.salt, 1000, 64, 'sha512').toString('hex');
+		
+		if (hash != user.hash) {
+			return fail(422, { data: input });
+		}
+
+		// Return session token
+		
+
+		// Redirect to user page
+		throw redirect(303, '/user');
 	}
 } satisfies Actions;

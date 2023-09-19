@@ -28,15 +28,15 @@ export const actions = {
 			return fail(422, { data: input });
 		}
 
+		// Connect to database
 		const collection = Database.client.db('papu').collection('users');
 		
 		// Check if user already exists
-		collection.findOne({$or:[{username:input.username},{email:input.email}]}).then((result) => {
-			if (result) {
-				return fail(422, { data: input });
-			}
-		});
+		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
+			return fail(422, { data: input });
+		}
 
+		// Hash password
 		var salt = crypto.randomBytes(16).toString('hex');
 		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
 
@@ -52,11 +52,9 @@ export const actions = {
 			if (!result) {
 				return fail(422, { data: input });
 			}
-
-			console.log('User created');
 		});
 
 		// Redirect to login page
-		throw redirect(303, '/login');
+		throw redirect(303, '/user/login');
 	}
 } satisfies Actions;
