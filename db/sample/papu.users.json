@@ -1,0 +1,9 @@
+[{
+  "_id": {
+    "$oid": "6511eab1b7e133de882ee0dd"
+  },
+  "username": "test",
+  "email": "test@test",
+  "salt": "020f6c1a2f6519096b164052d1ddbf9c",
+  "hash": "0519d31b3aaab61b94eb5b9faf8565aba1b3daf62fba6b27a9655540c770c71073be82bfb840e2cdf83fd08545763798297e8c2efd5e30ea25a8d569edac6cb6"
+}]

@@ -8,6 +8,7 @@ import { Database } from '$lib/server/database';
 import type { User } from '$lib/types/user';
 
 import crypto from 'crypto';
+import { createToken } from '$lib/server/auth';
 
 export const actions = {
 	register: async ({ request }) => {
@@ -43,7 +44,11 @@ export const actions = {
 		}
 
 		// Return session token
-		
+		const token = createToken({
+			userID: user._id,
+			userName: user.username,
+			claims: user.claims
+		});
 
 		// Redirect to user page
 		throw redirect(303, '/user');
