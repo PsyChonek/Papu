@@ -11,6 +11,8 @@ const PORTS = '27017:27017';
 const DBName = 'papu';
 const sampleFolder = './sample';
 const containerName = 'papu-mongo';
+const timeout = 1000;
+let tries = 3;
 
 // Check if docker is running
 try {
@@ -44,87 +46,56 @@ file.services.mongo.environment.MONGO_INITDB_ROOT_USERNAME = UserName;
 file.services.mongo.environment.MONGO_INITDB_ROOT_PASSWORD = UserPass;
 file.services.mongo.container_name = containerName;
 
-// Write docker-compose.yml
-fs.writeFileSync('./docker-compose.yml', yaml.dump(file), 'utf8');
+const setupDatabase = async () => {
+	// Write docker-compose.yml
+	fs.writeFileSync('./docker-compose.yml', yaml.dump(file), 'utf8');
 
-// Start docker-compose
-console.log('Starting database...');
-execSync('docker-compose up -d');
-
-// Try if container is running
-let tries = 3;
-let timeout = 1000;
-
-for (let i = 0; i < tries; i++) {
-	try {
-		execSync(`docker exec ${containerName} mongo --eval "printjson(db.serverStatus())"`);
-		break;
-	} catch (error) {
-		// wait
-		console.log('Container is not running! Tries left: ' + tries);
-		setTimeout(() => {}, timeout);
-
-		tries--;
-		if (tries <= 0) {
-			console.log('Container is not running!');
-			exit();
+	// Start docker-compose and wait for container to run
+	console.log('Starting database...');
+	execSync('docker-compose up -d');
+	for (let i = 0; i < tries; i++) {
+		try {
+			execSync(`docker exec ${containerName} mongo --eval "printjson(db.serverStatus())"`);
+			break;
+		} catch (error) {
+			console.log('Container is not running! Tries left: ' + tries);
+			tries--;
+			await new Promise((resolve) => setTimeout(resolve, timeout));
 		}
 	}
-}
 
-console.log('Database started!');
-
-// Seed DB with sample data
-
-// Open database connection
-
-// Connection URL
-const url = `mongodb://${UserName}:${UserPass}@localhost:${PORTS.split(':')[0]}/?authMechanism=DEFAULT`;
-
-console.log('Connecting to database...');
-
-// Connect to local db
-async function dbConnect() {
-	let db = await MongoClient.connect(url, { useUnifiedTopology: true });
-	console.log('Connected to database!');
-
-	// Create database
-	const dbo = db.db(DBName);
-
-	if (!fs.existsSync(sampleFolder)) {
-		console.log('Sample data folder exists!');
-
-		// Close connection
-		db.close();
-
+	if (tries <= 0) {
+		console.log('Container is not running!');
 		exit();
-	} else {
-		// Create collections
-		fs.readdir(sampleFolder, (err, files) => {
-			if (err) throw err;
-
-			files.forEach((file) => {
-				console.log(file);
-				const collectionName = file.split('.')[1];
-				col = dbo.collection(collectionName);
-				console.log(`Collection ${col.collectionName} created!`);
-
-				data = fs.readFileSync(`${sampleFolder}/${file}`, 'utf8');
-				data = data.replace('$oid', 'oid');
-
-				json = JSON.parse(data);
-
-				col.updateMany(json);
-			});
-
-			console.log('Sample data inserted!');
-
-			// Close connection
-			db.close();
-
-			exit();
-		});
 	}
-}
 
-dbConnect();
+	console.log('Database started!');
+
+	// Seed DB with sample data
+	const url = `mongodb://${UserName}:${UserPass}@localhost:${PORTS.split(':')[0]}/?authMechanism=DEFAULT`;
+
+	console.log('Connecting to database...');
+	const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+
+	console.log('Connected successfully to server');
+	const db = client.db(DBName);
+	console.log('Database created!');
+
+	// Create collections and insert sample data
+	const files = fs.readdirSync(sampleFolder);
+	for (let file of files) {
+		const collectionName = file.split('.')[1]; // assuming file names are like "collection.json"
+		const data = JSON.parse(fs.readFileSync(`${sampleFolder}/${file}`, 'utf8').replace('$oid', 'oid'));
+		await db.collection(collectionName).insertMany(data);
+		console.log(`Sample data inserted into ${collectionName} collection!`);
+	}
+
+	console.log('Database setup complete!');
+	client.close();
+	exit();
+};
+
+setupDatabase().catch((err) => {
+	console.error('An error occurred:', err);
+	exit(1);
+});
