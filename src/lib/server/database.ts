@@ -3,26 +3,44 @@
     TODO: Add logger, middleware, and error handling
 */
 
-import { MongoClient } from "mongodb";
+import { CONNECTION_STRING, DB_NAME } from '$env/static/private'
+
+import { Db, MongoClient } from 'mongodb';
 
 export class Database {
-    //  Store database connection as a singleton
-    private static _client: MongoClient;
+	//  Store database connection as a singleton
+	private static _client: MongoClient;
 
-    // Connect to database
+	public static get client(): MongoClient {
+		if (!Database._client) {
+			this.connect();
+			if (!Database._client) {
+				throw new Error('Database is not connected');
+			}
+		}
 
-    public static async connect(): Promise<void> {
-        const uri = process.env.CONNECTION_STRING;
-        if (!uri) {
-            throw new Error('CONNECTION_STRING is not defined');
-        }
+		return Database._client;
+	}
 
-        const client = new MongoClient(uri);
+	// Connect to database
+	public static async connect(): Promise<void> {
+        console.log(CONNECTION_STRING);   
 
-        Database._client = client;
+		if (!CONNECTION_STRING) {
+			throw new Error('CONNECTION_STRING is not defined');
+		}
 
-        await client.connect();
+		const client = new MongoClient(CONNECTION_STRING);
 
-        console.log('Connected to database');
-    }
+		Database._client = client;
+
+		await client.connect();
+
+		console.log('Connected to database');
+	}
+
+	// Get default database
+	public static  db(): Db {
+		return Database.client.db(DB_NAME);
+	}
 }
