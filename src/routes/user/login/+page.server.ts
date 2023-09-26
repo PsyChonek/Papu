@@ -23,7 +23,7 @@ export const actions = {
 		var clientValidation: Validation = validateLoginForm(input);
 
 		if (!clientValidation.isValid) {
-			return fail(422, { data: input });
+			return fail(422, { data: input, errors: [{ text: 'Invalid input', type: 'input' }] });
 		}
 
 		// Connect to database
@@ -32,7 +32,7 @@ export const actions = {
 		// Find user with same username
 		var user: User | null = (await collection.findOne({ username: input.username })) as User | null;
 		if (user == null) {
-			return fail(422, { data: input });
+			return fail(422, { data: input, errors: [{ text: 'User does not exist', type: 'input' }]});
 		}
 
 		// Check if password is correct
@@ -41,14 +41,7 @@ export const actions = {
 		console.log(user._id?.toString());
 
 		if (hash != user.hash) {
-			return fail(422, { data: input });
-		}
-
-		// console.log(user._id?.id.toString());
-		console.log(user._id?.toString());
-
-		if (user._id == null) {
-			return fail(422, { data: input });
+			return fail(422, { data: input, errors: [{ text: 'Incorrect password', type: 'input' }]});
 		}
 
 		const TokenPayload: Token = {

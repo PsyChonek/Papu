@@ -10,11 +10,10 @@
 		username: '',
 		email: '',
 		password: '',
-		passwordConfirm: '',
+		passwordConfirm: ''
 	};
 
 	$: validation = validateRegisterForm(inputForm);
-
 </script>
 
 <div id="main">
@@ -44,6 +43,11 @@
 			<div>
 				{#if validation}
 					{#each validation.errors as error}
+						<p class="text-red-500 text-center m-0">{error.text}</p>
+					{/each}
+				{/if}
+				{#if form?.errors}
+					{#each form.errors as error}
 						<p class="text-red-500 text-center m-0">{error.text}</p>
 					{/each}
 				{/if}

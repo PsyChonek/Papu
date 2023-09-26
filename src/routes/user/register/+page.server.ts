@@ -8,6 +8,7 @@ import { Database } from '$lib/server/database';
 import type { User } from '$lib/types/user';
 
 import crypto from 'crypto';
+import { ObjectId } from 'mongodb';
 
 export const actions = {
 	register: async ({ request }) => {
@@ -25,7 +26,7 @@ export const actions = {
 		var clientValidation : Validation = validateRegisterForm(input);
 
 		if (!clientValidation.isValid) {
-			return fail(422, { data: input });
+			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
 
 		// Connect to database
@@ -33,7 +34,7 @@ export const actions = {
 		
 		// Check if user already exists
 		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
-			return fail(422, { data: input });
+			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
 		}
 
 		// Hash password
@@ -44,13 +45,14 @@ export const actions = {
 			username: input.username,
 			email: input.email,
 			salt: salt,
-			hash: hash
+			hash: hash,
+			_id: new ObjectId()
 		};
 
 		// Insert user into database
 		collection.insertOne(user).then((result) => {
 			if (!result) {
-				return fail(422, { data: input });
+				return fail(422, { data: input, errors: [{text: 'Failed to create user', type: 'server'}] });
 			}
 		});
 

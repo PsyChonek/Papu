@@ -1,7 +1,7 @@
 import type { ObjectId } from 'mongodb';
 
 export interface User {
-	_id?: ObjectId | undefined; // Unique identifier
+	_id: ObjectId ; // Unique identifier
 	username: string;
 	email: string;
 	salt: string; // Random string used to salt the password hash
