@@ -8,8 +8,14 @@ const date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').spli
 // Append date to version
 const versionWithDate = `${date}`;
 
-// Update .env version
-fs.writeFileSync('./.env', `PUBLIC_APP_VERSION=${versionWithDate}`);
+// Read .env
+let env = fs.readFileSync('./.env', 'utf8');
+
+// Replace PUBLIC_APP_VERSION
+env = env.replace(/PUBLIC_APP_VERSION=.*/g, `PUBLIC_APP_VERSION=${versionWithDate}`);
+
+// Update .env 
+fs.writeFileSync('./.env', env);
 
 // Log version
 console.log(`versionWithDate: ${versionWithDate}`);
