@@ -38,8 +38,6 @@ export const actions = {
 		// Check if password is correct
 		var hash = crypto.pbkdf2Sync(input.password, user.salt, 1000, 64, 'sha512').toString('hex');
 
-		console.log(user._id?.toString());
-
 		if (hash != user.hash) {
 			return fail(422, { data: input, errors: [{ text: 'Incorrect password', type: 'input' }]});
 		}
