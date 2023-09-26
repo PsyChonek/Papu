@@ -3,9 +3,9 @@
     TODO: Add logger, middleware, and error handling
 */
 
-import { CONNECTION_STRING } from '$env/static/private'
+import { CONNECTION_STRING, DB_NAME } from '$env/static/private'
 
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 
 export class Database {
 	//  Store database connection as a singleton
@@ -23,7 +23,6 @@ export class Database {
 	}
 
 	// Connect to database
-
 	public static async connect(): Promise<void> {
         console.log(CONNECTION_STRING);   
 
@@ -38,5 +37,10 @@ export class Database {
 		await client.connect();
 
 		console.log('Connected to database');
+	}
+
+	// Get default database
+	public static  db(): Db {
+		return Database.client.db(DB_NAME);
 	}
 }

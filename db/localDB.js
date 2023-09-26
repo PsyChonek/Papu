@@ -2,7 +2,7 @@ import yaml from 'js-yaml';
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { exit } from 'process';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 // Settings for local database
 const UserName = 'papuadmin';
@@ -85,7 +85,16 @@ const setupDatabase = async () => {
 	const files = fs.readdirSync(sampleFolder);
 	for (let file of files) {
 		const collectionName = file.split('.')[1]; // assuming file names are like "collection.json"
-		const data = JSON.parse(fs.readFileSync(`${sampleFolder}/${file}`, 'utf8').replace('$oid', 'oid'));
+		var data = JSON.parse(fs.readFileSync(`${sampleFolder}/${file}`, 'utf8'));
+
+		// Transform $oid to ObjectID
+		data = data.map((item) => {
+			if (item._id && item._id.$oid) {
+				item._id = new ObjectId(item._id.$oid);
+			}
+			return item;
+		});
+
 		await db.collection(collectionName).insertMany(data);
 		console.log(`Sample data inserted into ${collectionName} collection!`);
 	}

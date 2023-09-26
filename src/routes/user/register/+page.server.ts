@@ -29,7 +29,7 @@ export const actions = {
 		}
 
 		// Connect to database
-		const collection = Database.client.db('papu').collection('users');
+		const collection = Database.db().collection('users');
 		
 		// Check if user already exists
 		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
@@ -44,7 +44,7 @@ export const actions = {
 			username: input.username,
 			email: input.email,
 			salt: salt,
-			hash: hash,
+			hash: hash
 		};
 
 		// Insert user into database

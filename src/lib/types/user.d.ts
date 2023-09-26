@@ -1,9 +1,11 @@
-import type { ObjectId } from "mongodb";
+import type { ObjectId } from 'mongodb';
 
-export interface User { 
-    id?: ObjectId; // Unique identifier
-    username: string;
-    email: string;
-    salt: string; // Random string used to salt the password hash
-    hash: string; // Hashed password
+export interface User {
+	_id?: ObjectId | undefined; // Unique identifier
+	username: string;
+	email: string;
+	salt: string; // Random string used to salt the password hash
+	hash: string; // Hashed password
 }
+
+
