@@ -3,7 +3,7 @@
     TODO: Add logger, middleware, and error handling
 */
 
-import { CONNECTION_STRING, DB_NAME } from '$env/static/private'
+import { env } from '$env/dynamic/private'
 
 import { Db, MongoClient } from 'mongodb';
 
@@ -24,13 +24,13 @@ export class Database {
 
 	// Connect to database
 	public static async connect(): Promise<void> {
-        console.log(CONNECTION_STRING);   
+        console.log(env.CONNECTION_STRING);   
 
-		if (!CONNECTION_STRING) {
+		if (!env.CONNECTION_STRING) {
 			throw new Error('CONNECTION_STRING is not defined');
 		}
 
-		const client = new MongoClient(CONNECTION_STRING);
+		const client = new MongoClient(env.CONNECTION_STRING);
 
 		Database._client = client;
 
@@ -41,6 +41,6 @@ export class Database {
 
 	// Get default database
 	public static  db(): Db {
-		return Database.client.db(DB_NAME);
+		return Database.client.db(env.DB_NAME);
 	}
 }

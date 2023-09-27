@@ -1,4 +1,4 @@
-import { JWT_EXPIRE_MINUTES, JWT_ISSUER, JWT_SECRET } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { verify, sign } from 'jsonwebtoken';
 /**
  * Auth utils for SvelteKit
@@ -7,31 +7,31 @@ import { verify, sign } from 'jsonwebtoken';
 
 // Create a JWT token
 export function createToken(payload: Token): string {
-	if (!JWT_SECRET) {
+	if (!env.JWT_SECRET) {
 		throw new Error('JWT_SECRET is not defined');
 	}
 
-	if (!JWT_EXPIRE_MINUTES) {
+	if (!env.JWT_EXPIRE_MINUTES) {
 		throw new Error('JWT_EXPIRE_MINUTES is not defined');
 	}
 
-	if (!JWT_ISSUER) {
+	if (!env.JWT_ISSUER) {
 		throw new Error('JWT_ISSUER is not defined');
 	}
 
-	return sign(payload, JWT_SECRET, {
-		expiresIn: Number.parseInt(JWT_EXPIRE_MINUTES) * 60,
-		issuer: JWT_ISSUER
+	return sign(payload, env.JWT_SECRET, {
+		expiresIn: Number.parseInt(env.JWT_EXPIRE_MINUTES) * 60,
+		issuer: env.JWT_ISSUER
 		});
 }
 
 // Verify a JWT token
 export function verifyToken(token: string): any {
-	if (!JWT_SECRET) {
+	if (!env.JWT_SECRET) {
 		throw new Error('JWT_SECRET is not defined');
 	}
 
-	return verify(token, JWT_SECRET);
+	return verify(token, env.JWT_SECRET);
 }
 
 // Get the user from the JWT token
