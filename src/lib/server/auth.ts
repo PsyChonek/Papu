@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { verify, sign } from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
 /**
  * Auth utils for SvelteKit
  * Using JWT and httpOnly cookies
@@ -19,7 +19,7 @@ export function createToken(payload: Token): string {
 		throw new Error('JWT_ISSUER is not defined');
 	}
 
-	return sign(payload, env.JWT_SECRET, {
+	return pkg.sign(payload, env.JWT_SECRET, {
 		expiresIn: Number.parseInt(env.JWT_EXPIRE_MINUTES) * 60,
 		issuer: env.JWT_ISSUER
 		});
@@ -31,7 +31,7 @@ export function verifyToken(token: string): any {
 		throw new Error('JWT_SECRET is not defined');
 	}
 
-	return verify(token, env.JWT_SECRET);
+	return pkg.verify(token, env.JWT_SECRET);
 }
 
 // Get the user from the JWT token
