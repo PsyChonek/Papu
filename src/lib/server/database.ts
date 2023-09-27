@@ -4,43 +4,25 @@
 */
 
 import { env } from '$env/dynamic/private'
-
-import { Db, MongoClient } from 'mongodb';
-
+import { Mongoose } from 'mongoose';
 export class Database {
-	//  Store database connection as a singleton
-	private static _client: MongoClient;
+	
+	public static Client(){
+		if (!env.CONNECTION_STRING) throw new Error('MONGO_URI is not defined');
 
-	public static get client(): MongoClient {
-		if (!Database._client) {
-			this.connect();
-			if (!Database._client) {
-				throw new Error('Database is not connected');
-			}
+		const client = new Mongoose();
+		client.connect(env.CONNECTION_STRING).then(() => {
+			console.log('Database connected');
 		}
-
-		return Database._client;
+		).catch((err) => {
+			console.log(err);
+		}
+		);
+		return client;
 	}
 
-	// Connect to database
-	public static async connect(): Promise<void> {
-        console.log(env.CONNECTION_STRING);   
-
-		if (!env.CONNECTION_STRING) {
-			throw new Error('CONNECTION_STRING is not defined');
-		}
-
-		const client = new MongoClient(env.CONNECTION_STRING);
-
-		Database._client = client;
-
-		await client.connect();
-
-		console.log('Connected to database');
-	}
-
-	// Get default database
-	public static  db(): Db {
-		return Database.client.db(env.DB_NAME);
+	public static Db(dbName:string = env.DB_NAME)
+	{
+		return Database.Client().connection.useDb(dbName);	
 	}
 }

@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/private';
 import pkg from 'jsonwebtoken';
+import { logger } from './logger';
 /**
  * Auth utils for SvelteKit
  * Using JWT and httpOnly cookies
@@ -28,6 +29,7 @@ export function createToken(payload: Token): string {
 // Verify a JWT token
 export function verifyToken(token: string): any {
 	if (!env.JWT_SECRET) {
+		logger.error('JWT_SECRET is not defined');
 		throw new Error('JWT_SECRET is not defined');
 	}
 

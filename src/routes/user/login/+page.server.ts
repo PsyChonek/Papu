@@ -27,7 +27,7 @@ export const actions = {
 		}
 
 		// Connect to database
-		const collection = Database.client.db('papu').collection('users');
+		const collection = Database.Db().collection('users');
 
 		// Find user with same username
 		var user: User | null = (await collection.findOne({ username: input.username })) as User | null;

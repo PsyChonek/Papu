@@ -1,14 +1,8 @@
 import type { Actions } from './$types';
-import type { RegisterForm } from './+page';
-import { validateRegisterForm } from '$lib/validations/userValidation';
-
 import { fail, redirect } from '@sveltejs/kit';
+import type { RegisterForm } from './+page';
 import type { Validation } from '$lib/types/validation';
-import { Database } from '$lib/server/database';
-import type { User } from '$lib/types/user';
-
-import crypto from 'crypto';
-import { ObjectId } from 'mongodb';
+import { validateRegisterForm } from '$lib/validations/userValidation';
 
 export const actions = {
 	register: async ({ request }) => {
@@ -29,32 +23,32 @@ export const actions = {
 			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
 
-		// Connect to database
-		const collection = Database.db().collection('users');
+		// // Connect to database
+		// const collection = Database.Db().collection('users');
 		
-		// Check if user already exists
-		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
-			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
-		}
+		// // Check if user already exists
+		// if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
+		// 	return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
+		// }
 
-		// Hash password
-		var salt = crypto.randomBytes(16).toString('hex');
-		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
+		// // Hash password
+		// var salt = crypto.randomBytes(16).toString('hex');
+		// var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
 
-		var user : User = {
-			username: input.username,
-			email: input.email,
-			salt: salt,
-			hash: hash,
-			_id: new ObjectId()
-		};
+		// var user : User = {
+		// 	username: input.username,
+		// 	email: input.email,
+		// 	salt: salt,
+		// 	hash: hash,
+		// 	_id: new ObjectId()
+		// };
 
-		// Insert user into database
-		collection.insertOne(user).then((result) => {
-			if (!result) {
-				return fail(422, { data: input, errors: [{text: 'Failed to create user', type: 'server'}] });
-			}
-		});
+		// // Insert user into database
+		// collection.insertOne(user).then((result) => {
+		// 	if (!result) {
+		// 		return fail(422, { data: input, errors: [{text: 'Failed to create user', type: 'server'}] });
+		// 	}
+		// });
 
 		// Redirect to login page
 		throw redirect(303, '/user/login');
