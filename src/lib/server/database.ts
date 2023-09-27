@@ -1,24 +1,28 @@
-/*
-    TODO: Common database interface ?? Maybe easy to switch to another database
-    TODO: Add logger, middleware, and error handling
-*/
-
 import { env } from '$env/dynamic/private';
-import { MongoClient } from 'mongodb';
 import { logger } from './logger';
+import { MongoClient } from 'mongodb';
 
 export class Database {
-	public static Client(connectionString: string = env.CONNECTION_STRING) {
-		logger.info(`Connecting to database at ${connectionString}`);
+    private static clientInstance: MongoClient;
 
-		const client = new MongoClient(connectionString);
-		client.connect();
-		return client;
-	}
+    public static async getClientInstance(connectionString: string = env.CONNECTION_STRING): Promise<MongoClient> {
+        if (!Database.clientInstance) {
+            logger.info(`Connecting to database at ${connectionString}`);
+            try {
+                const client = new MongoClient(connectionString);
+                await client.connect();
+                Database.clientInstance = client;
+            } catch (error) {
+                logger.error('Failed to connect to the database:', error);
+                throw error;
+            }
+        }
+        return Database.clientInstance;
+    }
 
-	public static Db(dbName: string = env.DB_NAME) {
-		logger.info(`Getting database ${dbName}`);
-		
-		return Database.Client().db(dbName);
-	}
+    public static async getDb(dbName: string = env.DB_NAME) {
+        logger.info(`Getting database ${dbName}`);
+        const client = await Database.getClientInstance();
+        return client.db(dbName);
+    }
 }

@@ -27,19 +27,19 @@ export const actions = {
 		}
 
 		// Connect to database
-		const collection = Database.Db().collection('users');
+		const collection = (await Database.getDb()).collection('users');
 
 		// Find user with same username
 		var user: User | null = (await collection.findOne({ username: input.username })) as User | null;
 		if (user == null) {
-			return fail(422, { data: input, errors: [{ text: 'User does not exist', type: 'input' }]});
+			return fail(422, { data: input, errors: [{ text: 'User does not exist', type: 'input' }] });
 		}
 
 		// Check if password is correct
 		var hash = crypto.pbkdf2Sync(input.password, user.salt, 1000, 64, 'sha512').toString('hex');
 
 		if (hash != user.hash) {
-			return fail(422, { data: input, errors: [{ text: 'Incorrect password', type: 'input' }]});
+			return fail(422, { data: input, errors: [{ text: 'Incorrect password', type: 'input' }] });
 		}
 
 		const TokenPayload: Token = {
