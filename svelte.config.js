@@ -10,7 +10,7 @@ const pkg = JSON.parse(json);
 export default {
 	kit: {
 		adapter: adapter(),
-        version: {name: pkg.version}
+		version: { name: pkg.version }
 	},
 	preprocess: vitePreprocess()
 };
