@@ -3,26 +3,22 @@
     TODO: Add logger, middleware, and error handling
 */
 
-import { env } from '$env/dynamic/private'
-import { Mongoose } from 'mongoose';
-export class Database {
-	
-	public static Client(){
-		if (!env.CONNECTION_STRING) throw new Error('MONGO_URI is not defined');
+import { env } from '$env/dynamic/private';
+import { MongoClient } from 'mongodb';
+import { logger } from './logger';
 
-		const client = new Mongoose();
-		client.connect(env.CONNECTION_STRING).then(() => {
-			console.log('Database connected');
-		}
-		).catch((err) => {
-			console.log(err);
-		}
-		);
+export class Database {
+	public static Client(connectionString: string = env.CONNECTION_STRING) {
+		logger.info(`Connecting to database at ${connectionString}`);
+
+		const client = new MongoClient(connectionString);
+		client.connect();
 		return client;
 	}
 
-	public static Db(dbName:string = env.DB_NAME)
-	{
-		return Database.Client().connection.useDb(dbName);	
+	public static Db(dbName: string = env.DB_NAME) {
+		logger.info(`Getting database ${dbName}`);
+		
+		return Database.Client().db(dbName);
 	}
 }

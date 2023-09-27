@@ -59,5 +59,4 @@ jobs:
           server-dir: sub/papu.vazacdaniel.com/
           username: papu@vazacdaniel.com
           password: ${{ secrets.FTP_GITHUB_PASS }}
-          dangerous-clean-slate: true
         

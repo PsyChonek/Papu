@@ -29,7 +29,6 @@ export function createToken(payload: Token): string {
 // Verify a JWT token
 export function verifyToken(token: string): any {
 	if (!env.JWT_SECRET) {
-		logger.error('JWT_SECRET is not defined');
 		throw new Error('JWT_SECRET is not defined');
 	}
 
@@ -45,7 +44,6 @@ export function getUserIDFromToken(token: string): any {
 // Get claims from the JWT token
 export function getClaimsFromToken(token: string): any {
 	const payload = verifyToken(token);
-
 	return payload.claims;
 }
 
