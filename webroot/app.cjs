@@ -1,5 +1,2 @@
-async function loadApp() {
-    await import("./index.js");
-}
-
-loadApp();
+import("dotenv").then(module => module.config());
+import("./index.js");

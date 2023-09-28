@@ -3,10 +3,16 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { RegisterForm } from './+page';
 import type { Validation } from '$lib/types/validation';
 import { validateRegisterForm } from '$lib/validations/userValidation';
+import { Database } from '$lib/server/database';
+import crypto from 'crypto';
+import type { User } from '$lib/types/user';
+import { Collection, ObjectId } from 'mongodb';
 
 export const actions = {
 	register: async ({ request }) => {
 		const formData = await request.formData();
+
+		console.log(formData.get('username'));
 
 		// Create form object
 		let input: RegisterForm = {
@@ -23,32 +29,39 @@ export const actions = {
 			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
 
-		// // Connect to database
-		// const collection = Database.Db().collection('users');
+		console.log('Validated');
+
+		// Connect to database
+		const collection: Collection = Database.getDb().collection('users');
 		
-		// // Check if user already exists
-		// if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
-		// 	return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
-		// }
+		// Check if user already exists
+		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
+			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
+		}
 
-		// // Hash password
-		// var salt = crypto.randomBytes(16).toString('hex');
-		// var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
+		console.log('User does not exist');
 
-		// var user : User = {
-		// 	username: input.username,
-		// 	email: input.email,
-		// 	salt: salt,
-		// 	hash: hash,
-		// 	_id: new ObjectId()
-		// };
+		// Hash password
+		var salt = (crypto as any).randomBytes(16).toString('hex');
+		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
 
-		// // Insert user into database
-		// collection.insertOne(user).then((result) => {
-		// 	if (!result) {
-		// 		return fail(422, { data: input, errors: [{text: 'Failed to create user', type: 'server'}] });
-		// 	}
-		// });
+		var user : User = {
+			username: input.username,
+			email: input.email,
+			salt: salt,
+			hash: hash,
+			_id: new ObjectId()
+		};
+
+		console.log('Hashed password');
+
+		// Insert user into database check if user inserted
+		const result = await collection.insertOne(user)
+		if (result.insertedId == null) {
+			return fail(422, { data: input, errors: [{text: 'Failed to insert user', type: 'input'}] });
+		}
+
+		console.log('Inserted user');
 
 		// Redirect to login page
 		throw redirect(303, '/user/login');

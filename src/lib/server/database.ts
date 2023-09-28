@@ -1,28 +1,31 @@
-/*
-    TODO: Common database interface ?? Maybe easy to switch to another database
-    TODO: Add logger, middleware, and error handling
-*/
+import { env } from '$env/dynamic/private';
+import { logger } from './logger';
+import { MongoClient } from 'mongodb';
 
-import { env } from '$env/dynamic/private'
-import { Mongoose } from 'mongoose';
 export class Database {
-	
-	public static Client(){
-		if (!env.CONNECTION_STRING) throw new Error('MONGO_URI is not defined');
+    private static clientInstance: MongoClient;
 
-		const client = new Mongoose();
-		client.connect(env.CONNECTION_STRING).then(() => {
-			console.log('Database connected');
-		}
-		).catch((err) => {
-			console.log(err);
-		}
-		);
-		return client;
-	}
+    public static getClientInstance(connectionString: string = env.CONNECTION_STRING): any {
 
-	public static Db(dbName:string = env.DB_NAME)
-	{
-		return Database.Client().connection.useDb(dbName);	
-	}
+        console.log("Connecting");
+
+        if (!Database.clientInstance) {
+            logger.info(`Connecting to database at ${connectionString}`);
+            try {
+                const client = new MongoClient(connectionString);
+                client.connect();
+                Database.clientInstance = client;
+            } catch (error) {
+                logger.error('Failed to connect to the database:', error);
+                throw error;
+            }
+        }
+        return Database.clientInstance;
+    }
+
+    public static getDb(dbName: string = env.DB_NAME) {
+        logger.info(`Getting database ${dbName}`);
+        const client = Database.getClientInstance();
+        return client.db(dbName);
+    }
 }
