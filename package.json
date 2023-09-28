@@ -9,7 +9,7 @@
     "dev:client": "vite dev --mode DEV",
     "dev:db": "cd ./db && node ./localDB.js",
     "copy": "cpy package.json build && cpy 'webroot/**/*' 'build/'",
-    "build": "npm run autoVersion && vite build --mode PROD && npm run copy",
+    "build": "npm run autoVersion && vite build --mode PROD && npm run copy && npm run build:copyWebroot",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
@@ -18,7 +18,8 @@
     "format": "prettier --plugin-search-dir . --write .",
     "test:integration": "playwright test",
     "test:unit": "vitest",
-    "start": "node ./index.js"
+    "start": "node ./build/app.cjs",
+    "build:copyWebroot": "cpy 'webroot/**/*' 'build/'"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
