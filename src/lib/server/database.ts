@@ -6,6 +6,9 @@ export class Database {
     private static clientInstance: MongoClient;
 
     public static getClientInstance(connectionString: string = env.CONNECTION_STRING): any {
+
+        console.log("Connecting");
+
         if (!Database.clientInstance) {
             logger.info(`Connecting to database at ${connectionString}`);
             try {
