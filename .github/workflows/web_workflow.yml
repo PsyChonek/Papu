@@ -13,13 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18.x
 
-      - name: Install dependencies
-        run: npm install
+      # - name: Install dependencies
+      #   run: npm install
 
       # - name: Get installed Playwright version
       #   id: playwright-version
@@ -48,15 +48,15 @@ jobs:
       #     name: playwright-test-results
       #     path: test-results/
 
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
 
-      - name: Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: vazacdaniel.com
-          local-dir: ./build/
-          server-dir: sub/papu.vazacdaniel.com/
-          username: papu@vazacdaniel.com
-          password: ${{ secrets.FTP_GITHUB_PASS }}
+      # - name: Deploy
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      #   with:
+      #     server: vazacdaniel.com
+      #     local-dir: ./build/
+      #     server-dir: sub/papu.vazacdaniel.com/
+      #     username: papu@vazacdaniel.com
+      #     password: ${{ secrets.FTP_GITHUB_PASS }}
         
