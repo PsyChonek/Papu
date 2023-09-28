@@ -7,5 +7,3 @@ export interface User {
 	salt: string; // Random string used to salt the password hash
 	hash: string; // Hashed password
 }
-
-
