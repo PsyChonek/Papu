@@ -8,7 +8,6 @@
     "dev": "concurrently \"npm run dev:db\" \"npm run dev:client\"",
     "dev:client": "vite dev --mode DEV",
     "dev:db": "cd ./db && node ./localDB.js",
-    "copy": "cpy package.json build && cpy 'webroot/**/*' 'build/'",
     "build": "npm run autoVersion && vite build --mode PROD && npm run copy && npm run build:copyWebroot",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
@@ -18,8 +17,7 @@
     "format": "prettier --plugin-search-dir . --write .",
     "test:integration": "playwright test",
     "test:unit": "vitest",
-    "start": "node ./build/app.cjs",
-    "build:copyWebroot": "cpy 'webroot/**/*' 'build/'"
+    "start": "node ./build/index.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
@@ -29,7 +27,6 @@
     "@types/node": "^20.4.6",
     "autoprefixer": "^10.4.14",
     "concurrently": "^8.2.1",
-    "cpy-cli": "^5.0.0",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte": "^2.30.0",
