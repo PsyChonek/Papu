@@ -7,11 +7,8 @@ FROM arm64v8/node:18 as devPkg
     # Copy package.json and package-lock.json (if available)
     COPY package*.json ./
 
-    # Copy node_modules action cache
-    COPY node_modules ./node_modules
-
     # Install all dependencies
-    RUN npm prune
+    RUN npm install
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as pkg
@@ -22,11 +19,8 @@ FROM arm64v8/node:18 as pkg
     # Copy package.json and package-lock.json (if available)
     COPY package*.json ./
 
-    # Copy node_modules action cache
-    COPY node_modules ./node_modules
-
     # Install production dependencies
-    RUN npm prune --omit=dev
+    RUN npm install --omit=dev
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as build
