@@ -4,11 +4,8 @@ FROM arm64v8/node:18 as devPkg
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (if available)
-COPY package*.json ./
-
-# Install development dependencies
-RUN npm install --verbose
+# Copy node_modules action cache
+COPY node_modules ./node_modules
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as pkg
@@ -19,8 +16,10 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
+RUN npm config set registry https://registry.npmjs.org/
+
 # Install production dependencies
-RUN npm install --omit=dev --verbose
+RUN npm install --omit=dev
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as build
@@ -35,7 +34,7 @@ COPY . .
 COPY --from=devPkg /usr/src/app/node_modules ./node_modules
 
 # Your application's build command
-CMD [ "node", "run build" ]
+CMD [ "node", "run build:ci" ]
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as production
