@@ -1,5 +1,4 @@
-name: Deploy web on merge
-
+name: Build docker image and push to GitHub docker registry
 on:
   push:
     branches:
@@ -10,53 +9,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18.x
+      - name: Create .env file from GitHub secret
+        run: echo "${{ secrets.prod }}" > .env
 
-      # - name: Install dependencies
-      #   run: npm install
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Login to GitHub docker registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Get installed Playwright version
-      #   id: playwright-version
-      #   run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
-
-      # - uses: actions/cache@v3
-      #   name: Check for Playwright browsers cache
-      #   id: playwright-cache
-      #   with:
-      #     path: |
-      #       ~/.cache/ms-playwright
-      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-      # - name: Install Playwright Browsers
-      #   run: npx playwright install --with-deps
-      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
-      # - run: npx playwright install-deps
-      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-
-      # - name: Test
-      #   run: npm run test
-
-      # - uses: actions/upload-artifact@v2
-      #   if: always()
-      #   with:
-      #     name: playwright-test-results
-      #     path: test-results/
-
-      # - name: Build
-      #   run: npm run build
-
-      # - name: Deploy
-      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      #   with:
-      #     server: vazacdaniel.com
-      #     local-dir: ./build/
-      #     server-dir: sub/papu.vazacdaniel.com/
-      #     username: papu@vazacdaniel.com
-      #     password: ${{ secrets.FTP_GITHUB_PASS }}
-        
+      - name: Build and push docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest

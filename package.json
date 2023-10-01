@@ -4,20 +4,21 @@
   "version": "0.0.8",
   "private": true,
   "scripts": {
+    "start": "node build",
+    "start:new": "npm run build && npm run start",
     "autoVersion": "node ./scripts/autoVersion.js",
     "dev": "concurrently \"npm run dev:db\" \"npm run dev:client\"",
-    "dev:client": "vite dev --mode DEV",
+    "dev:client": "vite dev --mode dev",
     "dev:db": "cd ./db && node ./localDB.js",
-    "build": "npm run autoVersion && vite build --mode PROD && npm run copy && npm run build:copyWebroot",
-    "preview": "vite preview",
+    "build": "vite build --mode prod",
+    "build:ci": "npm run autoVersion && vite build --mode prod",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-    "test": "npm run test:integration && npm run test:unit",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
+    "lint:fix": "prettier --plugin-search-dir . --write .",
+    "test": "npm run test:integration && npm run test:unit",
     "test:integration": "playwright test",
-    "test:unit": "vitest",
-    "start": "node ./build/index.js"
+    "test:unit": "vitest"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
