@@ -51,6 +51,15 @@ jobs:
     needs: build
     environment: prod
     steps:
+      - name: Copy docker-compose.yml
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: docker-compose.yml
+          target: papu/docker-compose.yml
+
       - name: Connect ssh, pull and run
         uses: appleboy/ssh-action@v1.0.0
         with:
