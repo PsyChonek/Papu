@@ -59,8 +59,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd papu
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }}
-            ${{ secrets.DOCKERHUB_TOKEN }}
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
             docker-compose down
             docker-compose pull
             docker-compose up -d
