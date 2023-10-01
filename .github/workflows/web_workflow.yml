@@ -40,6 +40,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ vars.REPO_NAME }}:latest
+          tags: ${{ vars.REPO_NAME }}:latest
           cache-from: type=registry,ref=user/app:latest
           cache-to: type=inline
