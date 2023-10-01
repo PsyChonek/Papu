@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     name: Build and push docker image
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: prod
     steps:
       - name: Checkout code
@@ -47,7 +47,7 @@ jobs:
 
   deploy:
     name: Deploy to VM
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     environment: prod
     steps:
