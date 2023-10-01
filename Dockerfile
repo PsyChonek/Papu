@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install development dependencies
-RUN npm install
+RUN npm install --verbose
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as pkg
@@ -20,7 +20,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install production dependencies
-RUN npm install --omit=dev
+RUN npm install --omit=dev --verbose
 
 # Use Node.js 18 for ARM64v8
 FROM arm64v8/node:18 as build
