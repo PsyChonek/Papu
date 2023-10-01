@@ -31,7 +31,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Copy development dependencies
-COPY --from=devPkg /usr/src/app/node_modules ./node_modules
+COPY --from=devPkg node_modules ./node_modules
 
 # Your application's build command
 CMD [ "node", "run build:ci" ]
@@ -46,10 +46,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Copy production dependencies
-COPY --from=pkg /usr/src/app/node_modules ./node_modules
+COPY --from=pkg node_modules ./node_modules
 
 # Copy the build directory
-COPY --from=build /usr/src/app/build ./build
+COPY --from=build build ./build
 
 # Your application's run command
 CMD [ "node", "run start" ]
