@@ -39,6 +39,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ vars.REPO_NAME }}:latest
-          cache-from: type=registry,ref=user/app:latest
+          tags: danvazy/${{ vars.REPO_NAME }}:latest
+          cache-from: type=registry,ref=danvazy/papu:latest
           cache-to: type=inline
