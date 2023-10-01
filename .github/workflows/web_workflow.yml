@@ -41,5 +41,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ghcr.io/${{ vars.REPO_NAME }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
