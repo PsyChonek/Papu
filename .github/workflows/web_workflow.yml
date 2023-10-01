@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    name: Build and push docker image
     runs-on: ubuntu-latest
     environment: prod
     steps:
@@ -17,7 +18,7 @@ jobs:
 
       - name: Grant execute permission to script
         run: chmod +x ./scripts/replace_env.sh
-  
+
       - name: Replace .env variables
         env:
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
@@ -26,7 +27,7 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Login to Docker image registry
         uses: docker/login-action@v3
         with:
@@ -43,3 +44,22 @@ jobs:
           tags: danvazy/${{ vars.REPO_NAME }}:latest
           cache-from: type=registry,ref=danvazy/papu:latest
           cache-to: type=inline
+
+  deploy:
+    name: Deploy to VM
+    runs-on: ubuntu-latest
+    needs: build
+    environment: prod
+    steps:
+      - name: Connect ssh, pull and run
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd papu
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d

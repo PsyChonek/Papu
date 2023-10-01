@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  papu:
+    image: danvazy/papu:latest
+    ports:
+      - 3000:3001
