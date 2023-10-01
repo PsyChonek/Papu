@@ -39,6 +39,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          platforms: linux/arm64
           tags: danvazy/${{ vars.REPO_NAME }}:latest
           cache-from: type=registry,ref=danvazy/papu:latest
           cache-to: type=inline
