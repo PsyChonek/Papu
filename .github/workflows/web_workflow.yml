@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: docker-compose.yml
-          target: ./papu/docker-compose.yml
+          target: papu
 
       - name: Connect ssh, pull and run
         uses: appleboy/ssh-action@v1.0.0
