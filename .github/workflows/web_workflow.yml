@@ -15,6 +15,9 @@ jobs:
       - name: Install node_modules
         run: npm install
 
+      - name: Grant execute permission to script
+        run: chmod +x ./scripts/replace_env.sh
+  
       - name: Replace .env variables
         env:
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
