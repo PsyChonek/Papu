@@ -19,9 +19,8 @@ export const logger = winston.createLogger({
 		// - Write to all logs with level `info` and below to `combined.log`
 		// - Write all logs error (and below) to `error.log`.
 		//
-		new winston.transports.File({ filename: 'logs/debug.log', level: 'debug', format: fileFormat }),
 		new winston.transports.File({ filename: 'logs/error.log', level: 'error', format: fileFormat }),
 		new winston.transports.File({ filename: 'logs/combined.log', format: fileFormat }),
-		new winston.transports.Console({ format: consoleFormat }) // Use the console format for console transport
+		new winston.transports.Console({ format: consoleFormat, level: 'debug' }) // Use the console format for console transport
 	]
 });

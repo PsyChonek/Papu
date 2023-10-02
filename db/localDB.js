@@ -10,7 +10,7 @@ const UserPass = 'papuadmin';
 const PORTS = '27017:27017';
 const DBName = 'papu';
 const sampleFolder = './sample';
-const containerName = 'papu-mongo';
+const containerName = 'papudb';
 const timeout = 1000;
 let tries = 3;
 

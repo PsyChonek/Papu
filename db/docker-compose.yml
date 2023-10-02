@@ -1,7 +1,9 @@
+## WARING EDITED IN localDB.js
+
 version: '3.8'
 services:
   mongo:
-    container_name: papu-mongo
+    container_name: papudb
     image: mongo
     restart: always
     environment:
