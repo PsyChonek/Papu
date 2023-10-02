@@ -26,5 +26,4 @@ services:
 
 networks:
   papu-network:
-    external:
-      name: papu-network
+    external: true
