@@ -1,6 +1,6 @@
 import { CONNECTION_STRING, DB_NAME } from '$env/static/private';
 import { logger } from './logger';
-import { MongoClient } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
 export class Database {
     private static clientInstance: MongoClient;
@@ -28,6 +28,17 @@ export class Database {
         }
         catch(error){
             logger.error('Failed to get database:', error);
+            throw error;
+        }
+    }
+
+    public static getCollection(collectionName: string, dbName: string = DB_NAME) : Collection {
+        try{
+            const db = Database.getDb(dbName);
+            return db.collection(collectionName);
+        }
+        catch(error){
+            logger.error('Failed to get collection:', error);
             throw error;
         }
     }
