@@ -29,3 +29,7 @@ services:
 networks:
   papu-network:
     external: true
+
+volumes:
+  papu-data:
+    external: true
