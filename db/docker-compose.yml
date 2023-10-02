@@ -11,9 +11,3 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: papuadmin
     ports:
       - '27017:27017'
-    networks:
-      - papu-network
-
-networks:
-  papu-network:
-    driver: bridge

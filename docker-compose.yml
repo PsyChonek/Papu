@@ -12,6 +12,19 @@ services:
     networks:
       - papu-network
 
+  papudb:
+    container_name: papudb
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: papuadmin
+      MONGO_INITDB_ROOT_PASSWORD: papuadmin
+    ports:
+      - '27017:27017'
+    networks:
+      - papu-network
+
 networks:
   papu-network:
-    driver: bridge
+    external:
+      name: papu-network
