@@ -22,25 +22,8 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: ./scripts/replace_env.sh
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Login to Docker image registry
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          platforms: linux/arm64
-          tags: danvazy/${{ vars.REPO_NAME }}:latest
-          cache-from: type=registry,ref=danvazy/papu:latest
-          cache-to: type=inline
+      - name: Run docker build
+        run: docker build -t papu .
 
   deploy:
     name: Deploy to VM
@@ -65,7 +48,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd papu
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
             docker compose down
             docker compose pull
             docker compose up -d
