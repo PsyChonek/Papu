@@ -22,12 +22,12 @@ export const actions = {
 		};
 
 		// Validate input data
-		var clientValidation: Validation = validateRegisterForm(input);
+		var clientValidation : Validation = validateRegisterForm(input);
 
 		logger.debug(`User ${input.username}, email ${input.email} registration attempt`);
 
 		if (!clientValidation.isValid) {
-			return fail(422, { data: input, errors: [{ text: 'Invalid input', type: 'input' }] });
+			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
 
 		logger.debug(`User ${input.username}, email ${input.email} input valid`);
@@ -35,13 +35,15 @@ export const actions = {
 		// Connect to database
 		const collection: Collection = await Database.getDb().collection('users');
 
-		logger.debug(`User ${input.username}, email ${input.email} database connected`);
+		logger.debug(collection);
 
+		logger.debug(`User ${input.username}, email ${input.email} database connected`);
+		
 		// Check if user already exists
-		// if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
-		// 	logger.debug(`User ${input.username}, email ${input.email} already exists`);
-		// 	return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
-		// }
+		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
+			logger.debug(`User ${input.username}, email ${input.email} already exists`);
+			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
+		}
 
 		logger.debug(`User ${input.username}, email ${input.email} does not exist`);
 
@@ -49,7 +51,7 @@ export const actions = {
 		var salt = (crypto as any).randomBytes(16).toString('hex');
 		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
 
-		var user: User = {
+		var user : User = {
 			username: input.username,
 			email: input.email,
 			salt: salt,
@@ -60,19 +62,13 @@ export const actions = {
 		logger.debug(`User ${user.username}, email ${user.email} hashed`);
 
 		// Insert user into database check if user inserted
-		try {
-			const result = await collection.insertOne(user);
-
-			if (result.insertedId == null) {
-				return fail(422, { data: input, errors: [{ text: 'Failed to insert user', type: 'input' }] });
-			}
-		} catch (err) {
-			logger.error(`User ${user.username}, email ${user.email} failed to insert`);
-			return fail(422, { data: input, errors: [{ text: 'Failed to insert user', type: 'input' }] });
+		const result = await collection.insertOne(user)
+		if (result.insertedId == null) {
+			return fail(422, { data: input, errors: [{text: 'Failed to insert user', type: 'input'}] });
 		}
 
 		logger.info(`User ${user.username}, email ${user.email}, userID ${user._id} registered`);
-
+		
 		// Redirect to login page
 		throw redirect(303, '/user/login');
 	}
