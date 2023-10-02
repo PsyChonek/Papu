@@ -1,11 +1,11 @@
-import { env } from '$env/dynamic/private';
+import { CONNECTION_STRING, DB_NAME } from '$env/static/private';
 import { logger } from './logger';
 import { MongoClient } from 'mongodb';
 
 export class Database {
     private static clientInstance: MongoClient;
 
-    public static getClientInstance(connectionString: string = env.CONNECTION_STRING): any {
+    public static getClientInstance(connectionString: string = CONNECTION_STRING): any {
         if (!Database.clientInstance) {
             logger.info(`Connecting to database at ${connectionString}`);
             try {
@@ -21,7 +21,7 @@ export class Database {
         return Database.clientInstance;
     }
 
-    public static getDb(dbName: string = env.DB_NAME) {
+    public static getDb(dbName: string = DB_NAME) {
         try{
             const client = Database.getClientInstance();
             return client.db(dbName);
