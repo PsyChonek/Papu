@@ -25,8 +25,17 @@ export const load = (async ({ cookies }) => {
 	}
 
 	// Load user data
-	var user: User | null = (await Database.getDb().collection('users').findOne({ _id: new ObjectId(userId) })) as User | null;
-	user =  JSON.parse(JSON.stringify(user)) // Convert to JSON and back to remove ObjectId
+	var user: User | null = (await Database.getDb()
+		.collection('users')
+		.findOne({ _id: new ObjectId(userId) })) as User | null;
+	user = JSON.parse(JSON.stringify(user)); // Convert to JSON and back to remove ObjectId
 
-	return { User: { _id: userId } };
+	return {
+		User: {
+			_id: userId,
+			username: user?.username,
+			email: user?.email,
+			hash: user?.hash,
+		}
+	};
 }) satisfies PageServerLoad;

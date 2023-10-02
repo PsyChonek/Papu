@@ -12,6 +12,7 @@ export class Database {
                 const client = new MongoClient(connectionString);
                 client.connect();
                 Database.clientInstance = client;
+                logger.info('Connected to database');
             } catch (error) {
                 logger.error('Failed to connect to the database:', error);
                 throw error;
