@@ -74,7 +74,7 @@ const setupDatabase = async () => {
 	// Seed DB with sample data
 	const url = `mongodb://${UserName}:${UserPass}@localhost:${PORTS.split(':')[0]}/?authMechanism=DEFAULT`;
 
-	console.log('Connecting to database...');
+	console.log('Connecting to database: ' + url + '...');
 	const client = await MongoClient.connect(url);
 
 	console.log('Connected successfully to server');

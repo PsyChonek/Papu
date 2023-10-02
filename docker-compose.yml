@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   papu:
+    container_name: papu
     image: papu
     ports:
       - 3010:3000
