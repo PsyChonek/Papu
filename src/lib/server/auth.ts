@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import {JWT_SECRET, JWT_EXPIRE_MINUTES, JWT_ISSUER} from '$env/static/private';
 import pkg from 'jsonwebtoken';
 import { logger } from './logger';
 /**
@@ -8,36 +8,36 @@ import { logger } from './logger';
 
 // Create a JWT token
 export function createToken(payload: Token): string {
-	if (!env.JWT_SECRET) {
+	if (!JWT_SECRET) {
 		logger.error('JWT_SECRET is not defined');
 		throw new Error('JWT_SECRET is not defined');
 	}
 
-	if (!env.JWT_EXPIRE_MINUTES) {
+	if (!JWT_EXPIRE_MINUTES) {
 		logger.error('JWT_EXPIRE_MINUTES is not defined');
 		throw new Error('JWT_EXPIRE_MINUTES is not defined');
 	}
 
-	if (!env.JWT_ISSUER) {
+	if (!JWT_ISSUER) {
 		logger.error('JWT_ISSUER is not defined');
 		throw new Error('JWT_ISSUER is not defined');
 	}
 
-	return pkg.sign(payload, env.JWT_SECRET, {
-		expiresIn: Number.parseInt(env.JWT_EXPIRE_MINUTES) * 60,
-		issuer: env.JWT_ISSUER
+	return pkg.sign(payload, JWT_SECRET, {
+		expiresIn: Number.parseInt(JWT_EXPIRE_MINUTES) * 60,
+		issuer: JWT_ISSUER
 	});
 }
 
 // Verify a JWT token
 export function verifyToken(token: string): any {
 	try {
-		if (!env.JWT_SECRET) {
+		if (!JWT_SECRET) {
 			logger.error('JWT_SECRET is not defined');
 			throw new Error('JWT_SECRET is not defined');
 		}
 
-		return pkg.verify(token, env.JWT_SECRET);
+		return pkg.verify(token, JWT_SECRET);
 	} catch (err) {
 		logger.error(err);
 		throw new Error('Invalid token');
