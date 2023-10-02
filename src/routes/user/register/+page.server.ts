@@ -24,6 +24,8 @@ export const actions = {
 		// Validate input data
 		var clientValidation : Validation = validateRegisterForm(input);
 
+		logger.debug(`User ${input.username}, email ${input.email} registration attempt`);
+
 		if (!clientValidation.isValid) {
 			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
@@ -36,6 +38,8 @@ export const actions = {
 			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
 		}
 
+		logger.debug(`User ${input.username}, email ${input.email} does not exist`);
+
 		// Hash password
 		var salt = (crypto as any).randomBytes(16).toString('hex');
 		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
@@ -47,6 +51,8 @@ export const actions = {
 			hash: hash,
 			_id: new ObjectId()
 		};
+
+		logger.debug(`User ${user.username}, email ${user.email} hashed`);
 
 		// Insert user into database check if user inserted
 		const result = await collection.insertOne(user)
