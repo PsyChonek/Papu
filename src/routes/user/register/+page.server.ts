@@ -32,42 +32,37 @@ export const actions = {
 
 		logger.debug(`User ${input.username}, email ${input.email} input valid`);
 
-		// Connect to database
-		const collection: Collection = Database.getCollection('users');
+		const collection: Collection = await Database.getCollection('users');
+		
+		// Check if user already exists
+		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
+			logger.debug(`User ${input.username}, email ${input.email} already exists`);
+			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
+		}
 
-		logger.debug(collection.collectionName);
+		logger.debug(`User ${input.username}, email ${input.email} does not exist`);
 
-		// logger.debug(`User ${input.username}, email ${input.email} database connected`);
+		// Hash password
+		var salt = (crypto as any).randomBytes(16).toString('hex');
+		var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
 
-		// // Check if user already exists
-		// if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
-		// 	logger.debug(`User ${input.username}, email ${input.email} already exists`);
-		// 	return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
-		// }
+		var user : User = {
+			username: input.username,
+			email: input.email,
+			salt: salt,
+			hash: hash,
+			_id: new ObjectId()
+		};
 
-		// logger.debug(`User ${input.username}, email ${input.email} does not exist`);
+		logger.debug(`User ${user.username}, email ${user.email} hashed`);
 
-		// // Hash password
-		// var salt = (crypto as any).randomBytes(16).toString('hex');
-		// var hash = crypto.pbkdf2Sync(input.password, salt, 1000, 64, 'sha512').toString('hex');
+		// Insert user into database check if user inserted
+		const result = await collection.insertOne(user)
+		if (result.insertedId == null) {
+			return fail(422, { data: input, errors: [{text: 'Failed to insert user', type: 'input'}] });
+		}
 
-		// var user : User = {
-		// 	username: input.username,
-		// 	email: input.email,
-		// 	salt: salt,
-		// 	hash: hash,
-		// 	_id: new ObjectId()
-		// };
-
-		// logger.debug(`User ${user.username}, email ${user.email} hashed`);
-
-		// // Insert user into database check if user inserted
-		// const result = await collection.insertOne(user)
-		// if (result.insertedId == null) {
-		// 	return fail(422, { data: input, errors: [{text: 'Failed to insert user', type: 'input'}] });
-		// }
-
-		// logger.info(`User ${user.username}, email ${user.email}, userID ${user._id} registered`);
+		logger.info(`User ${user.username}, email ${user.email}, userID ${user._id} registered`);
 
 		// Redirect to login page
 		throw redirect(303, '/user/login');

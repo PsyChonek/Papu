@@ -5,12 +5,12 @@ import { Collection, MongoClient } from 'mongodb';
 export class Database {
     private static clientInstance: MongoClient;
 
-    public static getClientInstance(connectionString: string = CONNECTION_STRING): any {
+    public static async getClientInstance(connectionString: string = CONNECTION_STRING) {
         if (!Database.clientInstance) {
             logger.info(`Connecting to database at ${connectionString}`);
             try {
                 const client = new MongoClient(connectionString);
-                client.connect();
+                await client.connect();
                 Database.clientInstance = client;
                 logger.info('Connected to database');
             } catch (error) {
@@ -21,9 +21,9 @@ export class Database {
         return Database.clientInstance;
     }
 
-    public static getDb(dbName: string = DB_NAME) {
+    public static async getDb(dbName: string = DB_NAME) {
         try{
-            const client = Database.getClientInstance();
+            const client = await Database.getClientInstance();
             return client.db(dbName);
         }
         catch(error){
@@ -32,9 +32,9 @@ export class Database {
         }
     }
 
-    public static getCollection(collectionName: string, dbName: string = DB_NAME) : Collection {
+    public static async getCollection(collectionName: string, dbName: string = DB_NAME) {
         try{
-            const db = Database.getDb(dbName);
+            const db = await Database.getDb(dbName);
             return db.collection(collectionName);
         }
         catch(error){
