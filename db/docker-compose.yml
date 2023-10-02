@@ -1,5 +1,3 @@
-## WARING EDITED IN localDB.js
-
 version: '3.8'
 services:
   mongo:

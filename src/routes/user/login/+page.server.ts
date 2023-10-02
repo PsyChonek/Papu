@@ -9,6 +9,7 @@ import crypto from 'crypto';
 import { createToken, type Token } from '$lib/server/auth';
 import { createSession } from '$lib/server/session';
 import { logger } from '$lib/server/logger';
+import type { Collection } from 'mongodb';
 
 export const actions = {
 	register: async ({ request, cookies }) => {
@@ -28,7 +29,7 @@ export const actions = {
 		}
 
 		// Connect to database
-		const collection = (await Database.getDb()).collection('users');
+		const collection: Collection = await Database.getCollection('users');
 
 		// Find user with same username
 		var user: User | null = (await collection.findOne({ username: input.username })) as User | null;

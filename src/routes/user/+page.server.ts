@@ -3,6 +3,7 @@ import { Database } from '$lib/server/database';
 import { ObjectId } from 'bson';
 import type { User } from '$lib/types/user';
 import type { PageServerLoad } from './$types';
+import type { Collection } from 'mongodb';
 
 export const load = (async ({ cookies }) => {
 	// Get user from session
@@ -24,10 +25,12 @@ export const load = (async ({ cookies }) => {
 		};
 	}
 
-	// Load user data
-	var user: User | null = (await Database.getDb()
-		.collection('users')
-		.findOne({ _id: new ObjectId(userId) })) as User | null;
+	const collection: Collection = await Database.getCollection('users');
+
+	// Find user with same username
+	var user: User | null = (await collection.findOne({ _id: new ObjectId(userId) })) as User | null;
+
+	// Hack to remove ObjectId
 	user = JSON.parse(JSON.stringify(user)); // Convert to JSON and back to remove ObjectId
 
 	return {
@@ -35,7 +38,7 @@ export const load = (async ({ cookies }) => {
 			_id: userId,
 			username: user?.username,
 			email: user?.email,
-			hash: user?.hash,
+			hash: user?.hash
 		}
 	};
 }) satisfies PageServerLoad;
