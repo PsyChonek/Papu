@@ -23,6 +23,8 @@ services:
       - '27017:27017'
     networks:
       - papu-network
+    volumes:
+      - papu-data:/data/db
 
 networks:
   papu-network:
