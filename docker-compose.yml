@@ -9,4 +9,9 @@ services:
     restart: always
     volumes: # Mount logs to user/papu/logs
       - /var/log/papu:/usr/src/app/logs
-      
+    networks:
+      - papu-network
+
+networks:
+  papu-network:
+    driver: bridge
