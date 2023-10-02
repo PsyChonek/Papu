@@ -4,9 +4,7 @@ import winston, { format } from 'winston';
  * Example from github
  */
 export const logger = winston.createLogger({
-	level: 'info',
 	format: format.combine(
-		
 		format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
 		format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
 	),
@@ -21,16 +19,46 @@ export const logger = winston.createLogger({
 	]
 });
 
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-if (process.env.NODE_ENV !== 'production') {
-	logger.add(
-		new winston.transports.Console({
-			format: format.combine(
-				format.colorize(),
-				format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-				format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
-			)
-		})
-	);
-}
+logger.add(
+	new winston.transports.Console({
+		format: format.combine(
+			format.colorize(),
+			format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+			format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+		),
+		level: 'debug'
+	})
+);
+
+logger.add(
+	new winston.transports.Console({
+		format: format.combine(
+			format.colorize(),
+			format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+			format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+		),
+		level: 'info'
+	})
+);
+
+logger.add(
+	new winston.transports.Console({
+		format: format.combine(
+			format.colorize(),
+			format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+			format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+		),
+		level: 'warn'
+	})
+);
+
+logger.add(
+	new winston.transports.Console({
+		format: format.combine(
+			format.colorize(),
+			format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+			format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+		),
+		level: 'error'
+	})
+);

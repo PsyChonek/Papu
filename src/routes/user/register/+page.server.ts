@@ -39,6 +39,7 @@ export const actions = {
 		
 		// Check if user already exists
 		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
+			logger.debug(`User ${input.username}, email ${input.email} already exists`);
 			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
 		}
 
