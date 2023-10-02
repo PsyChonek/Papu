@@ -12,7 +12,7 @@ services:
     networks:
       - papu-network
 
-  papudb:
+  mongo:
     container_name: papudb
     image: mongo
     restart: always
