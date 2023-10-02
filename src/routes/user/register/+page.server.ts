@@ -30,8 +30,12 @@ export const actions = {
 			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
 
+		logger.debug(`User ${input.username}, email ${input.email} input valid`);
+
 		// Connect to database
-		const collection: Collection = Database.getDb().collection('users');
+		const collection: Collection = await Database.getDb().collection('users');
+
+		logger.debug(`User ${input.username}, email ${input.email} database connected`);
 		
 		// Check if user already exists
 		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
