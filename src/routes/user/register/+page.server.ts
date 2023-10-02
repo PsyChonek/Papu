@@ -7,12 +7,11 @@ import { Database } from '$lib/server/database';
 import crypto from 'crypto';
 import type { User } from '$lib/types/user';
 import { Collection, ObjectId } from 'mongodb';
+import { logger } from '$lib/server/logger';
 
 export const actions = {
 	register: async ({ request }) => {
 		const formData = await request.formData();
-
-		console.log(formData.get('username'));
 
 		// Create form object
 		let input: RegisterForm = {
@@ -29,8 +28,6 @@ export const actions = {
 			return fail(422, { data: input, errors: [{text: 'Invalid input', type: 'input'}]});
 		}
 
-		console.log('Validated');
-
 		// Connect to database
 		const collection: Collection = Database.getDb().collection('users');
 		
@@ -38,8 +35,6 @@ export const actions = {
 		if(await collection.findOne({$or:[{username:input.username},{email:input.email}]}) != null) {
 			return fail(422, { data: input, errors: [{text: 'User already exists', type: 'input'}] });
 		}
-
-		console.log('User does not exist');
 
 		// Hash password
 		var salt = (crypto as any).randomBytes(16).toString('hex');
@@ -53,16 +48,14 @@ export const actions = {
 			_id: new ObjectId()
 		};
 
-		console.log('Hashed password');
-
 		// Insert user into database check if user inserted
 		const result = await collection.insertOne(user)
 		if (result.insertedId == null) {
 			return fail(422, { data: input, errors: [{text: 'Failed to insert user', type: 'input'}] });
 		}
 
-		console.log('Inserted user');
-
+		logger.info(`User ${user.username}, email ${user.email}, userID ${user._id} registered`);
+		
 		// Redirect to login page
 		throw redirect(303, '/user/login');
 	}

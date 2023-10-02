@@ -6,9 +6,6 @@ export class Database {
     private static clientInstance: MongoClient;
 
     public static getClientInstance(connectionString: string = env.CONNECTION_STRING): any {
-
-        console.log("Connecting");
-
         if (!Database.clientInstance) {
             logger.info(`Connecting to database at ${connectionString}`);
             try {
@@ -24,8 +21,13 @@ export class Database {
     }
 
     public static getDb(dbName: string = env.DB_NAME) {
-        logger.info(`Getting database ${dbName}`);
-        const client = Database.getClientInstance();
-        return client.db(dbName);
+        try{
+            const client = Database.getClientInstance();
+            return client.db(dbName);
+        }
+        catch(error){
+            logger.error('Failed to get database:', error);
+            throw error;
+        }
     }
 }

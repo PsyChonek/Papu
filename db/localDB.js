@@ -75,7 +75,7 @@ const setupDatabase = async () => {
 	const url = `mongodb://${UserName}:${UserPass}@localhost:${PORTS.split(':')[0]}/?authMechanism=DEFAULT`;
 
 	console.log('Connecting to database...');
-	const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+	const client = await MongoClient.connect(url);
 
 	console.log('Connected successfully to server');
 	const db = client.db(DBName);

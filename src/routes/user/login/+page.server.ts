@@ -8,6 +8,7 @@ import type { User } from '$lib/types/user';
 import crypto from 'crypto';
 import { createToken, type Token } from '$lib/server/auth';
 import { createSession } from '$lib/server/session';
+import { logger } from '$lib/server/logger';
 
 export const actions = {
 	register: async ({ request, cookies }) => {
@@ -51,6 +52,8 @@ export const actions = {
 
 		// Store session token in cookie
 		createSession(cookies, token);
+
+		logger.info(`User ${user.username}, email ${user.email}, userID ${user._id} logged in`);
 
 		throw redirect(303, '/user');
 	}
