@@ -1,14 +1,14 @@
-import type { PageLoad } from "./$types";
+import type { PageLoad } from './$types';
 
 export const load = (async () => {
-    return {};
+	return {};
 }) satisfies PageLoad;
-    
+
 export interface RegisterForm {
-    username: string;
-    password: string;
-    passwordConfirm: string;
-    email: string;
+	username: string;
+	password: string;
+	passwordConfirm: string;
+	email: string;
 }
 
 export const prerender = false;

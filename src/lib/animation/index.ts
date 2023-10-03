@@ -1,4 +1,4 @@
-import { quadInOut } from "svelte/easing";
+import { quadInOut } from 'svelte/easing';
 
 export const defaultDuration = 500;
 

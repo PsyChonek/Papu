@@ -1,12 +1,12 @@
 import type { PageLoad } from './$types';
 
 export const load = (async () => {
-    return {};
+	return {};
 }) satisfies PageLoad;
 
 export interface LoginForm {
-    username: string;
-    password: string;
+	username: string;
+	password: string;
 }
 
 export const prerender = false;

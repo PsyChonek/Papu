@@ -14,7 +14,7 @@ let env = fs.readFileSync('./.env', 'utf8');
 // Replace PUBLIC_APP_VERSION
 env = env.replace(/PUBLIC_APP_VERSION=.*/g, `PUBLIC_APP_VERSION="${versionWithDate}"`);
 
-// Update .env 
+// Update .env
 fs.writeFileSync('./.env', env);
 
 // Log version

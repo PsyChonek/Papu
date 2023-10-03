@@ -1,4 +1,4 @@
-import {JWT_SECRET, JWT_EXPIRE_MINUTES, JWT_ISSUER} from '$env/static/private';
+import { JWT_SECRET, JWT_EXPIRE_MINUTES, JWT_ISSUER } from '$env/static/private';
 import pkg from 'jsonwebtoken';
 import { logger } from './logger';
 /**

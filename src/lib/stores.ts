@@ -31,7 +31,7 @@ function createIban(): Writable<string | null> {
 	return {
 		subscribe,
 		update: updateIban,
-		set: (iban) => updateIban(() => iban?.toUpperCase().replace(/\s/g, "") ?? null),
+		set: (iban) => updateIban(() => iban?.toUpperCase().replace(/\s/g, '') ?? null)
 	};
 }
 
