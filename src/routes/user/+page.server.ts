@@ -34,11 +34,6 @@ export const load = (async ({ cookies }) => {
 	user = JSON.parse(JSON.stringify(user)); // Convert to JSON and back to remove ObjectId
 
 	return {
-		User: {
-			_id: userId,
-			username: user?.username,
-			email: user?.email,
-			hash: user?.hash
-		}
+		User: user
 	};
 }) satisfies PageServerLoad;

@@ -1,5 +1,5 @@
-import type { LoginForm } from '../../routes/user/login/+page';
-import type { RegisterForm } from '../../routes/user/register/+page';
+import type { LoginForm } from '../../routes/login/+page';
+import type { RegisterForm } from '../../routes/register/+page';
 import type { Validation, ValidationError } from '../types/validation';
 
 export const validateRegisterForm = (input: RegisterForm) => {
