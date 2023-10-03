@@ -18,7 +18,8 @@
 		"lint:fix": "prettier --plugin-search-dir . --write .",
 		"test": "npm run test:integration && npm run test:unit",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"prepare": "svelte-kit sync"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
