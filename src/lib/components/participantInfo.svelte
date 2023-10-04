@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { paymentData } from './payment';
+	import { paymentData } from '../payment';
 	import CanvasQrCode from './canvasQrCode.svelte';
-	import FunkyNumber from './animation/funkyNumber.svelte';
+	import FunkyNumber from '../animation/funkyNumber.svelte';
 	import { iban } from '$lib/stores';
-	import type { Participant, ParticipantItem } from './types/participant';
+	import type { Participant, ParticipantItem } from '../types/participant';
 	import { arraySum } from '$lib';
-	import MutantTransition from './animation/mutantTransition.svelte';
+	import MutantTransition from '../animation/mutantTransition.svelte';
 
 	export let participant: Participant;
 	export let discount: number = 0;
