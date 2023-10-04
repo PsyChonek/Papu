@@ -34,6 +34,13 @@
 		// Clear input field
 		newParticipantName = '';
 	};
+
+	// Format input, remove spaces, uppercase and trim. Then update input value
+	const formatIban = (event: any) => {
+		const value = event.target.value.replace(/\s/g, '').toUpperCase().trim();
+		event.target.value = value;
+		iban.set(value);
+	};
 </script>
 
 <div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
@@ -42,7 +49,7 @@
 	<div class="flex flex-col gap-6 m-2">
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">IBAN</h1>
-			<input type="text" placeholder="IBAN" bind:value={$iban} class="text-center w-60 rounded-lg p-2 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-orange-500 focus:outline-none" />
+			<input type="text" placeholder="IBAN" bind:value={$iban} on:input={formatIban} class="text-center w-60 rounded-lg p-2 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-orange-500 focus:outline-none" />
 		</div>
 		<div class="flex flex-row items-center justify-evenly gap-6">
 			<h1 class="font-bold mr-auto text-2xl">Discount</h1>
