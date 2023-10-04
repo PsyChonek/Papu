@@ -2,48 +2,35 @@
 
 ## Info
 
-[**Production website**](https://papu.vazacdaniel.com)
+<https://papu.work>
 
 Easy to use app for creating qr codes for payments. Split the bill with your friends. No more calculating who owes what. Just enter the amount and the app will generate a qr code for you. Maybe track payments in the future. Show a list of payments. Maybe even order food from a restaurant.
 
 ## Deployment
 
-- Tag and push to github
-- Github actions will build and deploy to production site
+- Github Actions
+
+### Merge on master
+
+1. Build
+2. Deploy
 
 ## Tech
 
+- Docker <https://www.docker.com>
 - Svelte <https://svelte.dev>
-  - Static adapter
+  - Node adapter
 - Tailwind <https://tailwindcss.com>
 - Typescript <https://www.typescriptlang.org>
 - Vite <https://vitejs.dev>
 - prettier <https://prettier.io>
 - eslint <https://eslint.org>
 
-## VSCode Extensions
-
-- PostCSS Language Support
-- Tailwind CSS IntelliSense
-- Svelte for VS Code
-- Playwright Test for VS Code
-
-## Tests
+## Tests TODO
 
 - Vitest (Unit) <https://vitest.dev>
 - Playwright (end-to-end) <https://playwright.dev>
 - Github workflows testing <https://github.com/nektos/act>
-
-## TODO
-
-- [ ] Add ability to add new friend (Name, Price)
-- [ ] Generate payment qr code
-- [ ] User accounts
-- [ ] Monitor payments
-- [ ] Send qr code to user (email, text, slack, etc)
-- [ ] Pull food from Bold, Foodora, etc
-- [ ] Allow users to select food from menu
-- [ ] Order food from restaurant
 
 ## Developing
 
@@ -54,10 +41,59 @@ npm run dev
 npm run dev -- --open
 ```
 
+This will start DB, seed it with data and start the svelte app.
+
 ## Building
 
-```bash
-npm run build
+Done in Github Actions
 
-npm run preview
-```
+Application is dockerized, Docekrfile is in root of the project.
+
+Possible to run locally: `docker compose up`
+
+**Be aware that .env is missing DB credentials and JWT secret!**
+
+## TODO
+
+### Global
+
+- [ ] Add tests
+- [x] Add CI/CD
+- [ ] Kube?
+- [ ] Test CI/CD
+- [ ] Add analytics
+- [ ] ELK stack?
+
+### Main page
+
+- [x] Add users
+- [x] Add user items
+- [x] Calculate user items
+- [x] Generate QR code
+- [ ] Store orders locally to be able to restore them after refresh, or getting back to previous orders.
+- [ ] Add calc to all field to be able sum delivery and tip.
+- [ ] Add sale prec to user input. Some foods are not in sale and some are.
+- [ ] Add sync with server. If user is logged in, sync orders with server.
+- [ ] Add sync with other users. If user is logged in, sync orders with other users.
+- [ ] Check payment status. If payment is done, mark it as paid.
+
+### Login / Register
+
+- [x] Add login
+- [x] Add register
+- [ ] Add forgot password
+- [ ] Add reset password
+- [ ] Add email verification
+- [ ] Add social login
+- [ ] Animate form
+- [ ] Validate form (email, password)
+
+### Profile
+
+- [ ] Settings
+- [ ] Change password
+- [ ] Change email
+- [ ] Change name
+- [ ] Change avatar
+- [ ] Add connection to slack
+- [ ] Add connection to email (Auto recognize payments)
