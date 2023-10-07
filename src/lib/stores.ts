@@ -2,7 +2,6 @@ import { writable, type Writable, type Updater } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { Order } from './types/order';
 
-
 function createIban(): Writable<string | null> {
 	const key = 'iban';
 

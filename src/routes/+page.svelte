@@ -92,7 +92,7 @@
 		<div class="flex flex-row justify-center gap-5 m-2">
 			{#each activeOrder.participants as participant (participant.id)}
 				<MutantTransition>
-					<ParticipantInfo bind:participant {split} {removeParticipant} discount={activeOrder.discount}/>
+					<ParticipantInfo bind:participant {split} {removeParticipant} discount={activeOrder.discount} />
 				</MutantTransition>
 			{/each}
 		</div>

@@ -1,14 +1,4 @@
 {
-	"cSpell.words": [
-		"@tailwind",
-		"contentinfo",
-		"Foodora",
-		"IBAN",
-		"Papu",
-		"precompress",
-		"tailwind",
-		"tailwindcss",
-		"webroot"
-	],
+	"cSpell.words": ["@tailwind", "contentinfo", "Foodora", "IBAN", "Papu", "precompress", "tailwind", "tailwindcss", "webroot"],
 	"cSpell.language": "en,cs,en-US"
 }

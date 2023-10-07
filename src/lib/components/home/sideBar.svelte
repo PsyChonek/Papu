@@ -23,5 +23,5 @@
 	</div>
 {/if}
 {#if !showSideBar}
-		<button on:click={() => (showSideBar = !showSideBar)} class="left-10 top-10 fixed border-2 border-orange-500 rounded-xl p-1">{showSideBar ? 'Hide' : 'Show'}</button>
+	<button on:click={() => (showSideBar = !showSideBar)} class="left-10 top-10 fixed border-2 border-orange-500 rounded-xl p-1">{showSideBar ? 'Hide' : 'Show'}</button>
 {/if}

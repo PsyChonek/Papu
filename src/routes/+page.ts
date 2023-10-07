@@ -28,11 +28,11 @@ export const load = (async ({ url }) => {
 	if (!activeOrderKey) {
 		const today = new Date();
 
-        const activeOrder = ordersData.find((order) => {
-            const orderDate = new Date(order.date);
-            return orderDate.getFullYear() === today.getFullYear() && orderDate.getMonth() === today.getMonth() && orderDate.getDate() === today.getDate();
-        });
-        
+		const activeOrder = ordersData.find((order) => {
+			const orderDate = new Date(order.date);
+			return orderDate.getFullYear() === today.getFullYear() && orderDate.getMonth() === today.getMonth() && orderDate.getDate() === today.getDate();
+		});
+
 		if (activeOrder) {
 			url.searchParams.set('key', activeOrder.key);
 		} else {
