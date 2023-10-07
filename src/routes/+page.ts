@@ -9,47 +9,83 @@ export const load = (async ({ url }) => {
 	// const response = await fetch('/api/orders');
 
 	// Load orders from local storage
+	const response = localStorage.getItem('orders');
+	if (response) {
+		// Try to parse the response
+		let data: Order[] = [];
+		try {
+			data = JSON.parse(response);
+		} catch (e) {
+			console.error('Error parsing orders', e);
+		}
+
+		orders.set(data);
+	}
+
+	var orderKey: string | null = null;
+
 	if (browser) {
-		const response = localStorage.getItem('orders');
-		if (response) {
-			const data = JSON.parse(response);
-			orders.set(data);
+		orderKey = url.searchParams.get('key');
+
+		// Check if the order key is valid
+		if (orderKey) {
+			orders.subscribe((orders) => {
+				let found = false;
+				orders.forEach((order) => {
+					if (order.key === orderKey) {
+						found = true;
+					}
+				});
+				if (!found) {
+					orderKey = null;
+				}
+			});
+		}
+
+		if (!orderKey) {
+			// Look for an existing order key from today
+			const today = new Date();
+			orders.subscribe((orders) => {
+				orders.forEach((order) => {
+					if (order.date && order.date === today.toDateString()) {
+						orderKey = order.key;
+					}
+				});
+			});
+
+			// If there is an order key, save it to the URL
+			if (orderKey) {
+				url.searchParams.set('key', orderKey);
+			}
+		}
+
+		if (!orderKey) {
+			// Generate a new order
+			orders.update((orders) => {
+				const order: Order = {
+					key: generateKey(),
+					date: new Date().toDateString(),
+					total: 0,
+					other: 0,
+					participants: [],
+					discount: 0
+				};
+				orders.push(order);
+				return orders;
+			});
+
+			// Get the key from the new order
+			orders.subscribe((orders) => {
+				const order = orders[orders.length - 1];
+				orderKey = order.key;
+			});
+
+			// If there is an order key, save it to the URL
+			if (orderKey) {
+				url.searchParams.set('key', orderKey);
+			}
 		}
 	}
 
-	const activeOrderKey = url.searchParams.get('key');
-
-	var ordersData: Order[] = [];
-	orders.subscribe((orders) => {
-		ordersData = orders;
-	});
-
-	// If there is an active order, do nothing, otherwise set today's date as the active order, if there is one, or create a new one
-	if (!activeOrderKey) {
-		const today = new Date();
-
-		const activeOrder = ordersData.find((order) => {
-			const orderDate = new Date(order.date);
-			return orderDate.getFullYear() === today.getFullYear() && orderDate.getMonth() === today.getMonth() && orderDate.getDate() === today.getDate();
-		});
-
-		if (activeOrder) {
-			url.searchParams.set('key', activeOrder.key);
-		} else {
-			console.log('Creating new order');
-			const newOrder: Order = {
-				key: generateKey(),
-				date: today.toISOString(),
-				total: 0,
-				other: 0,
-				discount: 0,
-				participants: []
-			};
-			ordersData.push(newOrder);
-			orders.set(ordersData);
-			url.searchParams.set('id', newOrder.key);
-		}
-	}
-
-	return {};
+	return { orderKey };
 }) satisfies PageLoad;

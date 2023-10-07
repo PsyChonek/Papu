@@ -1,17 +1,20 @@
 <script lang="ts">
 	import type { Participant } from '$lib/types/participant';
-	import { iban } from '$lib/stores';
+	import { iban, orders } from '$lib/stores';
 	import ParticipantInfo from '../lib/components/participantInfo.svelte';
 	import MutantTransition from '$lib/animation/mutantTransition.svelte';
 	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
 	import { arraySum } from '$lib';
 	import SideBar from '$lib/components/home/sideBar.svelte';
-	import { orders } from '$lib/stores';
+	import type { Order } from '$lib/types/order';
+	import { generateKey } from '$lib/keys';
+	import type { PageData } from './$types';
+	export let data: PageData;
 
 	let newParticipantName = '';
 
-	$: activeOrder = $orders[$orders.length - 1];
-
+	$: activeOrder = $orders.find((order) => order.key === data.orderKey) as Order;
+	
 	$: split = activeOrder.other / activeOrder.participants.length;
 
 	// update total
@@ -30,20 +33,18 @@
 			items: []
 		};
 
-		orders.set([...$orders.slice(0, -1), { ...activeOrder, participants: [...(activeOrder.participants ?? []), participant] }]);
+		activeOrder.participants = [...activeOrder.participants, participant];
 
 		// Clear input field
 		newParticipantName = '';
+
+		$orders = [...$orders];
 	};
 
 	const removeParticipant = (id: string) => {
-		orders.set([
-			...$orders.slice(0, -1),
-			{
-				...activeOrder,
-				participants: activeOrder.participants.filter((participant) => participant.id !== id)
-			}
-		]);
+		activeOrder.participants = activeOrder.participants.filter((participant) => participant.id !== id);
+
+		$orders = [...$orders];
 	};
 
 	// Format input, remove spaces, uppercase and trim. Then update input value
@@ -55,7 +56,7 @@
 </script>
 
 <div>
-	<SideBar />
+	<SideBar activeKey={activeOrder.key} />
 
 	<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 		<!-- Payment info  -->
