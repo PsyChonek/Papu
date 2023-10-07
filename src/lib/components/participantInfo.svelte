@@ -10,6 +10,7 @@
 	export let participant: Participant;
 	export let discount: number = 0;
 	export let split: number = 0;
+	export let removeParticipant: (id: string) => void;
 
 	const createItem = (): ParticipantItem => ({ id: crypto.randomUUID() });
 	let defaultItem: ParticipantItem = createItem();
@@ -35,6 +36,7 @@
 </script>
 
 <div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
+	<button class="rounded-lg bg-orange-500 text-white p-2 w-full" on:click={() => removeParticipant(participant.id)}>Remove</button>
 	<h1 class="font-bold text-lg">{participant.name}</h1>
 	<h1><FunkyNumber value={participant.total} /></h1>
 	{#each items as { id, price } (id)}

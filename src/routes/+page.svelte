@@ -6,18 +6,17 @@
 	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
 	import { arraySum } from '$lib';
 	import SideBar from '$lib/components/home/sideBar.svelte';
-
-	let discount = 0; // In 0-100%
-	let other = 0;
+	import { orders } from '$lib/stores';
 
 	let newParticipantName = '';
-	let participants: Participant[] = [];
 
-	$: split = other / participants.length;
+	$: activeOrder = $orders[$orders.length - 1];
+
+	$: split = activeOrder.other / activeOrder.participants.length;
 
 	// update total
-	$: total = arraySum(participants.map((participant) => participant.total));
-	$: rawTotal = arraySum(participants.map((participant) => participant.nonDiscountedTotal));
+	$: total = arraySum(activeOrder.participants.map((participant) => participant.total));
+	$: rawTotal = arraySum(activeOrder.participants.map((participant) => participant.nonDiscountedTotal));
 
 	const addParticipant = () => {
 		if (!newParticipantName) return;
@@ -30,10 +29,21 @@
 			user: null,
 			items: []
 		};
-		participants = [...participants, participant];
+
+		orders.set([...$orders.slice(0, -1), { ...activeOrder, participants: [...(activeOrder.participants ?? []), participant] }]);
 
 		// Clear input field
 		newParticipantName = '';
+	};
+
+	const removeParticipant = (id: string) => {
+		orders.set([
+			...$orders.slice(0, -1),
+			{
+				...activeOrder,
+				participants: activeOrder.participants.filter((participant) => participant.id !== id)
+			}
+		]);
 	};
 
 	// Format input, remove spaces, uppercase and trim. Then update input value
@@ -57,11 +67,11 @@
 			</div>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<h1 class="font-bold mr-auto text-2xl">Discount</h1>
-				<input type="number" min="0" max="100" placeholder="Discount" bind:value={discount} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+				<input type="number" min="0" max="100" placeholder="Discount" bind:value={activeOrder.discount} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 			</div>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<h1 class="font-bold mr-auto text-2xl">Other</h1>
-				<input type="number" placeholder="Other" bind:value={other} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+				<input type="number" placeholder="Other" bind:value={activeOrder.other} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
 			</div>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<p class="font-bold mr-auto text-2xl">Total</p>
@@ -80,9 +90,9 @@
 
 	<div id="participants" class="rounded-xl bg-gray-100 p-5 m-2 min-w-[460px] mx-auto">
 		<div class="flex flex-row justify-center gap-5 m-2">
-			{#each participants as participant (participant.id)}
+			{#each activeOrder.participants as participant (participant.id)}
 				<MutantTransition>
-					<ParticipantInfo bind:participant {discount} {split} />
+					<ParticipantInfo bind:participant {split} {removeParticipant} discount={activeOrder.discount}/>
 				</MutantTransition>
 			{/each}
 		</div>

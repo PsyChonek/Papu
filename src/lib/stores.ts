@@ -1,15 +1,8 @@
 import { writable, type Writable, type Updater } from 'svelte/store';
 import { browser } from '$app/environment';
+import type { Order } from './types/order';
 
-/**
- * Creates a writable store for an IBAN string that is persisted in local storage.
- * @returns An object with `subscribe`, `update`, and `set` methods for interacting with the store.
- */
-/**
- * Creates a writable store for an IBAN string that is persisted in local storage.
- * @returns An object containing the `subscribe`, `update`, and `set` methods.
- * @typeParam T - The type of the value held by the store.
- */
+
 function createIban(): Writable<string | null> {
 	const key = 'iban';
 
@@ -64,3 +57,60 @@ function createIban(): Writable<string | null> {
 }
 
 export const iban = createIban();
+
+// Create a writable store for the orders with update to store in local storage
+function createOrders(): Writable<Order[]> {
+	const key = 'orders';
+
+	/**
+	 * Sets the orders in local storage.
+	 * @param orders - The orders to set in local storage.
+	 * @returns The same orders that were passed in.
+	 */
+	const setLocalStorageOrders = (orders: Order[]) => {
+		console.log('Orders set in local storage', orders);
+
+		if (browser) {
+			localStorage.setItem(key, JSON.stringify(orders));
+		} else {
+			console.warn('Could not set orders outside of browser');
+		}
+		return orders;
+	};
+
+	/**
+	 * Loads the orders from local storage.
+	 * @returns The orders loaded from local storage, or an empty array if they were not found.
+	 */
+	const loadLocalStorageOrders = () => {
+		if (browser) {
+			const orders = JSON.parse(localStorage.getItem(key) ?? '[]');
+			console.log('Orders loaded from local storage', orders);
+			return orders;
+		} else {
+			console.warn('Could not load orders outside of browser');
+			return [];
+		}
+	};
+
+	/**
+	 * A writable store that holds an array of orders, initialized with the value from local storage.
+	 * @typeParam T - The type of the value held by the store.
+	 * @returns An object containing the `subscribe` and `update` methods.
+	 */
+	const { subscribe, update } = writable<Order[]>([], (set) => set(loadLocalStorageOrders()));
+
+	/**
+	 * Updates the orders in the store using the provided updater function and persists them in local storage.
+	 * @param f - The updater function that takes the current orders array and returns the new orders array.
+	 */
+	const updateOrders = (f: Updater<Order[]>) => update((oldOrders) => setLocalStorageOrders(f(oldOrders)));
+
+	return {
+		subscribe,
+		update: updateOrders,
+		set: (orders) => updateOrders(() => orders ?? [])
+	};
+}
+
+export const orders = createOrders();
