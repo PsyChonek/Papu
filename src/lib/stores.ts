@@ -91,7 +91,7 @@ function createOrders(): Writable<Order[]> {
 			localStorage.setItem(key, JSON.stringify(orders));
 			timeout = null;
 		}, delay);
-	}
+	};
 
 	/**
 	 * Loads the orders from local storage.

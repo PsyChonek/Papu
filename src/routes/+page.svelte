@@ -50,7 +50,6 @@
 		event.target.value = value;
 		iban.set(value);
 	};
-
 </script>
 
 <div>
@@ -66,11 +65,29 @@
 			</div>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<h1 class="font-bold mr-auto text-2xl">Discount</h1>
-				<input type="number" min="0" max="100" placeholder="Discount" bind:value={activeOrder.discount} on:input={() => {$orders = [...$orders]}} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+				<input
+					type="number"
+					min="0"
+					max="100"
+					placeholder="Discount"
+					bind:value={activeOrder.discount}
+					on:input={() => {
+						$orders = [...$orders];
+					}}
+					class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+				/>
 			</div>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<h1 class="font-bold mr-auto text-2xl">Other</h1>
-				<input type="number" placeholder="Other" bind:value={activeOrder.other} on:input={() => {$orders = [...$orders]}} class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none" />
+				<input
+					type="number"
+					placeholder="Other"
+					bind:value={activeOrder.other}
+					on:input={() => {
+						$orders = [...$orders];
+					}}
+					class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+				/>
 			</div>
 			<div class="flex flex-row items-center justify-evenly gap-6">
 				<p class="font-bold mr-auto text-2xl">Total</p>
