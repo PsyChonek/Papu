@@ -67,15 +67,31 @@ function createOrders(): Writable<Order[]> {
 	 * @returns The same orders that were passed in.
 	 */
 	const setLocalStorageOrders = (orders: Order[]) => {
-		console.log('Orders set in local storage', orders);
+		// console.log('Orders set in local storage', orders);
 
 		if (browser) {
-			localStorage.setItem(key, JSON.stringify(orders));
+			delaySave(orders);
 		} else {
 			console.warn('Could not set orders outside of browser');
 		}
 		return orders;
 	};
+
+	// Debounce saving to local storage
+	let timeout: any;
+	/**
+	 * Saves the orders to local storage after a delay.
+	 * @param orders - The orders to save to local storage.
+	 * @param delay - The delay in milliseconds before saving.
+	 */
+	const delaySave = (orders: Order[], delay = 1000) => {
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			console.log('Orders saved to local storage', orders);
+			localStorage.setItem(key, JSON.stringify(orders));
+			timeout = null;
+		}, delay);
+	}
 
 	/**
 	 * Loads the orders from local storage.

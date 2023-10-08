@@ -47,7 +47,8 @@ export const load = (async ({ url }) => {
 			const today = new Date();
 			orders.subscribe((orders) => {
 				orders.forEach((order) => {
-					if (order.date && order.date === today.toDateString()) {
+					const date = new Date(order.date);
+					if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate()) {
 						orderKey = order.key;
 					}
 				});
@@ -64,8 +65,7 @@ export const load = (async ({ url }) => {
 			orders.update((orders) => {
 				const order: Order = {
 					key: generateKey(),
-					date: new Date().toDateString(),
-					total: 0,
+					date: new Date().toISOString(),
 					other: 0,
 					participants: [],
 					discount: 0

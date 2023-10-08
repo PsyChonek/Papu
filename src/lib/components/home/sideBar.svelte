@@ -44,7 +44,7 @@
 		</div>
 
 		{#each $orders as order}
-			<div class="flex flex-row justify-between rounded-xl p-2 px-4 items-baseline gap-2">
+			<div class="flex flex-row justify-between rounded-xl p-2 px-4 items-center gap-2">
 				<button
 					on:click={() => {
 						setActive(order.key);
@@ -65,7 +65,7 @@
 					<button on:click={() => removeOrder(order.key)} class="border-2 border-orange-500 rounded-xl p-1">🗑️</button>
 				{/if}
 				{#if order.key === $orderKeyStore}
-					<button class="border-2 border-orange-500 rounded-xl p-1">✅</button>
+					<button class="border-2 border-orange-500 rounded-xl p-1 items-center">✅</button>
 				{/if}
 			</div>
 		{/each}
