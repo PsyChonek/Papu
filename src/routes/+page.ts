@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import type { PageLoad } from './$types';
-import { orders } from '$lib/stores';
+import { orders, orderKeyStore } from '$lib/stores';
 import type { Order } from '$lib/types/order';
 import { generateKey } from '$lib/keys';
 
@@ -85,7 +85,11 @@ export const load = (async ({ url }) => {
 				url.searchParams.set('key', orderKey);
 			}
 		}
+
+		if (orderKey) {
+			orderKeyStore.set(orderKey);
+		}
 	}
 
-	return { orderKey };
+	return {};
 }) satisfies PageLoad;

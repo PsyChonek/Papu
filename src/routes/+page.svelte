@@ -1,19 +1,16 @@
 <script lang="ts">
 	import type { Participant } from '$lib/types/participant';
-	import { iban, orders } from '$lib/stores';
+	import { iban, orders, orderKeyStore } from '$lib/stores';
 	import ParticipantInfo from '../lib/components/participantInfo.svelte';
 	import MutantTransition from '$lib/animation/mutantTransition.svelte';
 	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
 	import { arraySum } from '$lib';
 	import SideBar from '$lib/components/home/sideBar.svelte';
 	import type { Order } from '$lib/types/order';
-	import { generateKey } from '$lib/keys';
-	import type { PageData } from './$types';
-	export let data: PageData;
 
 	let newParticipantName = '';
 
-	$: activeOrder = $orders.find((order) => order.key === data.orderKey) as Order;
+	$: activeOrder = $orders.find((order) => order.key === $orderKeyStore) as Order;
 	
 	$: split = activeOrder.other / activeOrder.participants.length;
 
@@ -53,10 +50,11 @@
 		event.target.value = value;
 		iban.set(value);
 	};
+
 </script>
 
 <div>
-	<SideBar activeKey={activeOrder.key} />
+	<SideBar/>
 
 	<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 		<!-- Payment info  -->

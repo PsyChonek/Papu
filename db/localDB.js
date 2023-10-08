@@ -101,7 +101,6 @@ const setupDatabase = async () => {
 
 	console.log('Database setup complete!');
 	client.close();
-	exit();
 };
 
 setupDatabase().catch((err) => {

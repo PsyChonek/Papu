@@ -113,3 +113,32 @@ function createOrders(): Writable<Order[]> {
 }
 
 export const orders = createOrders();
+
+// Writable orderKeyStore, when set, will be saved to the URL and used to load the order
+function createOrderKeyStore(): Writable<string> {
+	const setSearchParams = (key: string) => {
+		if (browser) {
+			const url = new URL(window.location.href);
+			if (key) {
+				url.searchParams.set('key', key);
+			} else {
+				url.searchParams.delete('key');
+			}
+			window.history.replaceState({}, '', url.toString());
+		} else {
+			console.warn('Could not set order key outside of browser');
+		}
+		return key;
+	}
+
+
+	const { subscribe, set, update } = writable('');
+
+	return {
+		subscribe,
+		set: (key) => set(setSearchParams(key)),
+		update
+	};
+}
+
+export const orderKeyStore = createOrderKeyStore();
