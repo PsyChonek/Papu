@@ -1,6 +1,6 @@
 <script>
 	import '../app.css';
-	import Footer from '$lib/footer.svelte';
+	import Footer from '../lib/components/footer.svelte';
 </script>
 
 <div class="grid grid-rows-[auto,1fr,auto] h-screen">
