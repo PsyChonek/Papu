@@ -11,7 +11,7 @@
 	let newParticipantName = '';
 
 	$: activeOrder = $orders.find((order) => order.key === $orderKeyStore) as Order;
-	
+
 	$: split = activeOrder.other / activeOrder.participants.length;
 
 	// update total
@@ -50,11 +50,10 @@
 		event.target.value = value;
 		iban.set(value);
 	};
-
 </script>
 
 <div>
-	<SideBar/>
+	<SideBar />
 
 	<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 		<!-- Payment info  -->

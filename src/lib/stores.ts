@@ -129,8 +129,7 @@ function createOrderKeyStore(): Writable<string> {
 			console.warn('Could not set order key outside of browser');
 		}
 		return key;
-	}
-
+	};
 
 	const { subscribe, set, update } = writable('');
 

@@ -10,7 +10,7 @@
 	export let participant: Participant;
 	export let discount: number = 0;
 	export let split: number = 0;
-	
+
 	export let removeParticipant: (id: string) => void;
 
 	const createItem = (): ParticipantItem => ({ id: crypto.randomUUID() });
