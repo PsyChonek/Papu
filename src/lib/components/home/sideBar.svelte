@@ -34,6 +34,10 @@
 	function setActive(key: string) {
 		orderKeyStore.set(key);
 	}
+
+	function orderOrdersByDate(a: Order, b: Order) {
+		return new Date(b.date).getTime() - new Date(a.date).getTime();
+	}
 </script>
 
 {#if showSideBar}
@@ -43,7 +47,8 @@
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">⬅️</button>
 		</div>
 
-		{#each $orders as order}
+		<!-- Place reverse order -->
+		{#each $orders.sort(orderOrdersByDate) as order}
 			<div class="flex flex-row justify-between rounded-xl p-2 px-4 items-center gap-2">
 				<button
 					on:click={() => {
