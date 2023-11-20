@@ -1,5 +1,5 @@
-# Use Node.js 18 for ARM64v8
-FROM arm64v8/node as devPkg
+# Use Node.js for ARM64v8
+FROM arm64v8/node:21-alpine3.17 as devPkg
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
@@ -10,8 +10,8 @@ FROM arm64v8/node as devPkg
     # Install all dependencies
     RUN npm install
 
-# Use Node.js 18 for ARM64v8
-FROM arm64v8/node as pkg
+# Use Node.js for ARM64v8
+FROM arm64v8/node:21-alpine3.17 as pkg
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
@@ -22,8 +22,8 @@ FROM arm64v8/node as pkg
     # Install production dependencies
     RUN npm install --omit=dev
 
-# Use Node.js 18 for ARM64v8
-FROM arm64v8/node as build
+# Use Node.js for ARM64v8
+FROM arm64v8/node:21-alpine3.17 as build
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
@@ -37,8 +37,8 @@ FROM arm64v8/node as build
     # Your application's build command
     RUN npm run build:ci
 
-# Use Node.js 18 for ARM64v8
-FROM arm64v8/node as production
+# Use Node.js for ARM64v8
+FROM arm64v8/node:21-alpine3.17 as production
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
