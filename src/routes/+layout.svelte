@@ -3,7 +3,7 @@
 	import Footer from '../lib/components/footer.svelte';
 </script>
 
-<div class="grid grid-rows-[auto,1fr,auto] h-screen">
+<div class="flex flex-col min-h-screen">
 	<div class=" m-8 mx-auto">
 		<a href="/" class="text-center font-bold text-5xl">Papu</a>
 	</div>
