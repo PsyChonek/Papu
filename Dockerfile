@@ -1,5 +1,5 @@
 # Use Node.js 18 for ARM64v8
-FROM arm64v8/node:18 as devPkg
+FROM arm64v8/node as devPkg
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
@@ -11,7 +11,7 @@ FROM arm64v8/node:18 as devPkg
     RUN npm install
 
 # Use Node.js 18 for ARM64v8
-FROM arm64v8/node:18 as pkg
+FROM arm64v8/node as pkg
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
@@ -23,7 +23,7 @@ FROM arm64v8/node:18 as pkg
     RUN npm install --omit=dev
 
 # Use Node.js 18 for ARM64v8
-FROM arm64v8/node:18 as build
+FROM arm64v8/node as build
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
@@ -38,7 +38,7 @@ FROM arm64v8/node:18 as build
     RUN npm run build:ci
 
 # Use Node.js 18 for ARM64v8
-FROM arm64v8/node:18 as production
+FROM arm64v8/node as production
 
     # Set the working directory in the container
     WORKDIR /usr/src/app
