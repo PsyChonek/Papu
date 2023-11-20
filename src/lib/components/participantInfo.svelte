@@ -39,9 +39,14 @@
 </script>
 
 <div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
-	<button class="rounded-lg bg-orange-500 text-white p-2 w-full" on:click={() => removeParticipant(participant.id)}>Remove</button>
+	<button class="rounded-lg bg-orange-400 text-white p-2 w-full" on:click={() => removeParticipant(participant.id)}>Remove</button>
 	<h1 class="font-bold text-lg">{participant.name}</h1>
-	<h1><FunkyNumber value={participant.total} /></h1>
+	<!-- Rounded border for canvas -->
+	<div class="outline outline-orange-200 outline-offset-0 rounded-xl">
+		<!-- QR code on load generate -->
+		<CanvasQrCode data={qrCodeData} />
+	</div>
+	<h1 class="font-bold text-lg"><FunkyNumber value={participant.total}/> Kč</h1>
 	{#each items as { id, price } (id)}
 		<MutantTransition>
 			<input
@@ -56,9 +61,4 @@
 		</MutantTransition>
 	{/each}
 
-	<!-- Rounded border for canvas -->
-	<div class="outline outline-orange-200 outline-offset-0 rounded-xl">
-		<!-- QR code on load generate -->
-		<CanvasQrCode data={qrCodeData} />
-	</div>
 </div>

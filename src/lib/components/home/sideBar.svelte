@@ -3,6 +3,7 @@
 	import { generateKey } from '$lib/keys';
 	import { orders, orderKeyStore } from '$lib/stores';
 	import type { Order } from '$lib/types/order';
+	import { slide } from 'svelte/transition';
 	var showSideBar = true;
 
 	function dateFormat(date: string): string {
@@ -34,16 +35,21 @@
 	function setActive(key: string) {
 		orderKeyStore.set(key);
 	}
+
+	function orderOrdersByDate(a: Order, b: Order) {
+		return new Date(b.date).getTime() - new Date(a.date).getTime();
+	}
 </script>
 
 {#if showSideBar}
-	<div class="bg-red-50 h-screen w-80 fixed left-0 top-0">
+	<div class="bg-red-50 h-screen w-80 fixed left-0 top-0" transition:slide={{ duration: 300, axis: 'x' }}>
 		<div class="flex flex-row justify-around m-5 items-baseline">
 			<h1 class="font-bold text-xl">Orders</h1>
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">⬅️</button>
 		</div>
 
-		{#each $orders as order}
+		<!-- Place reverse order -->
+		{#each $orders.sort(orderOrdersByDate) as order}
 			<div class="flex flex-row justify-between rounded-xl p-2 px-4 items-center gap-2">
 				<button
 					on:click={() => {
@@ -76,7 +82,7 @@
 	</div>
 {/if}
 {#if !showSideBar}
-	<div class="h-screen w-30 fixed left-0 top-0">
+	<div class="h-screen w-30 fixed left-0 top-0" transition:slide={{ duration: 300, axis: 'x' }}>
 		<div class="flex flex-row justify-around m-5 items-baseline">
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">➡️</button>
 		</div>
