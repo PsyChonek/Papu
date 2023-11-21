@@ -1,6 +1,7 @@
 import { Database } from "$lib/server/database";
 import type { Order } from "$lib/types/order";
 import type { RequestHandler } from "@sveltejs/kit";
+import { ObjectId } from "mongodb";
 
 export const POST: RequestHandler = async ({request, url}) => {
     // Parse the request body as JSON
@@ -10,6 +11,10 @@ export const POST: RequestHandler = async ({request, url}) => {
 
     // Update or insert the order
     for (const order of body) {
+        if (order._id === undefined || order._id === null) {
+            order._id = new ObjectId();
+        }
+
         await collection.updateOne(
             { _id: order._id},
             { $set: order },
@@ -17,5 +22,6 @@ export const POST: RequestHandler = async ({request, url}) => {
         );
     }
 
-    return new Response();
+    // Return a 200 OK and body
+    return new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };

@@ -68,7 +68,6 @@ function createOrders(): Writable<Order[]> {
 	 */
 	const setLocalStorageOrders = (orders: Order[]) => {
 		// console.log('Orders set in local storage', orders);
-
 		if (browser) {
 			delaySave(orders);
 		} else {
@@ -127,8 +126,10 @@ function createOrders(): Writable<Order[]> {
 			body: JSON.stringify(orders)
 		});
 		if (response.ok) {
-			const json = await response.json();
-			console.log('Order saved to database', json);
+			const result: Order[] = await response.json();
+			// Update the orders with the _id from the database
+			localStorage.setItem(key, JSON.stringify(result));
+			console.log('Order saved to database', result);
 		} else {
 			console.error('Order not saved to database', response);
 		}
