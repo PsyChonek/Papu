@@ -87,8 +87,13 @@ function createOrders(): Writable<Order[]> {
 	const delaySave = (orders: Order[], delay = 1000) => {
 		if (timeout) clearTimeout(timeout);
 		timeout = setTimeout(() => {
-			console.log('Orders saved to local storage', orders);
 			localStorage.setItem(key, JSON.stringify(orders));
+			try {
+				saveOrdersToDb(orders);
+			} catch (e) {
+				console.error('Error saving order to database', e);
+			}
+			console.log('Orders saved to local storage', orders);
 			timeout = null;
 		}, delay);
 	};
@@ -105,6 +110,27 @@ function createOrders(): Writable<Order[]> {
 		} else {
 			console.warn('Could not load orders outside of browser');
 			return [];
+		}
+	};
+
+	/**
+	 * Saves the order to the database.
+	 * Action /saveOrder
+	 * @param orders - The order to save to the database.
+	 */
+	const saveOrdersToDb = async (orders: Order[]) => {
+		const response = await fetch('/api/order/set', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(orders)
+		});
+		if (response.ok) {
+			const json = await response.json();
+			console.log('Order saved to database', json);
+		} else {
+			console.error('Order not saved to database', response);
 		}
 	};
 
