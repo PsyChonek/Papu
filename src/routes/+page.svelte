@@ -7,6 +7,7 @@
 	import { arraySum } from '$lib';
 	import SideBar from '$lib/components/home/sideBar.svelte';
 	import type { Order } from '$lib/types/order';
+	import type { ObjectId } from 'mongodb';
 
 	let newParticipantName = '';
 
@@ -22,7 +23,7 @@
 		if (!newParticipantName) return;
 
 		const participant: Participant = {
-			id: crypto.randomUUID(),
+			_id: crypto.randomUUID(),
 			name: newParticipantName,
 			total: 0,
 			nonDiscountedTotal: 0,
@@ -38,8 +39,8 @@
 		$orders = [...$orders];
 	};
 
-	const removeParticipant = (id: string) => {
-		activeOrder.participants = activeOrder.participants.filter((participant) => participant.id !== id);
+	const removeParticipant = (_id: string | ObjectId) => {
+		activeOrder.participants = activeOrder.participants.filter((participant) => participant._id !== _id);
 
 		$orders = [...$orders];
 	};
@@ -106,7 +107,7 @@
 
 	<div id="participants" class="rounded-xl bg-gray-100 p-5 m-2 min-w-[460px] mx-auto">
 		<div class="flex flex-row justify-center gap-5 m-2">
-			{#each activeOrder.participants as participant (participant.id)}
+			{#each activeOrder.participants as participant (participant._id)}
 				<MutantTransition>
 					<ParticipantInfo bind:participant {split} {removeParticipant} discount={activeOrder.discount} />
 				</MutantTransition>

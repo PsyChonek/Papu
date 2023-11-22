@@ -64,6 +64,7 @@ export const load = (async ({ url }) => {
 			// Generate a new order
 			orders.update((orders) => {
 				const order: Order = {
+					_id: crypto.randomUUID(),
 					key: generateKey(),
 					date: new Date().toISOString(),
 					other: 0,

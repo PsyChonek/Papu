@@ -23,6 +23,7 @@
 
 	function addOrder() {
 		const order: Order = {
+			_id: crypto.randomUUID(),
 			key: generateKey(),
 			date: new Date().toISOString(),
 			other: 0,

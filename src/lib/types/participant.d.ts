@@ -8,8 +8,7 @@
 import type { ObjectId } from "mongodb";
 
 export interface Participant {
-	_id?: ObjectId;
-	id: string;
+	_id: ObjectId | string;
 	user: User | null;
 	name: string;
 	items: ParticipantItem[];
@@ -17,9 +16,8 @@ export interface Participant {
 	nonDiscountedTotal: number;
 }
 
-/* ParicipantItem, represents an item in the participant's order  */
+/* Participant Item, represents an item in the participant's order  */
 export interface ParticipantItem {
-	_id?: ObjectId;
-	id: String;
+	_id: ObjectId | string;
 	price?: number | null;
 }
