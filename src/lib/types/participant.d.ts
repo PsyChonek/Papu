@@ -1,10 +1,14 @@
 /*
     Participant interface, used for the participant list
-
     participant is a user added to split the bill
+
+	id / _id: id is used for the client, _id is used for the database, it is stupid but it works
 */
 
+import type { ObjectId } from "mongodb";
+
 export interface Participant {
+	_id?: ObjectId;
 	id: string;
 	user: User | null;
 	name: string;
@@ -15,6 +19,7 @@ export interface Participant {
 
 /* ParicipantItem, represents an item in the participant's order  */
 export interface ParticipantItem {
+	_id?: ObjectId;
 	id: String;
 	price?: number | null;
 }
