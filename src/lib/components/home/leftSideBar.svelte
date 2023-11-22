@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { quadInOut } from 'svelte/easing';
 	import { arraySum } from '$lib';
 	import { generateKey } from '$lib/keys';
 	import { orders, orderKeyStore } from '$lib/stores';
 	import type { Order } from '$lib/types/order';
-	import { slide } from 'svelte/transition';
+	import { fade, slide, type SlideParams } from 'svelte/transition';
+
 	var showSideBar = true;
 
 	function dateFormat(date: string): string {
@@ -40,11 +42,27 @@
 	function orderOrdersByDate(a: Order, b: Order) {
 		return new Date(b.date).getTime() - new Date(a.date).getTime();
 	}
+
+	const fadeIn: SlideParams = {
+		delay: 300,
+		duration: 600,
+		axis: 'x',
+		easing: quadInOut
+	}
+
+	const fadeOut: SlideParams = {
+		delay: 0,
+		duration: 300,
+		axis: 'x',
+		easing: quadInOut
+	}
+
 </script>
 
 {#if showSideBar}
-	<div class="bg-red-50 h-screen w-80 fixed left-0 top-0" transition:slide={{ duration: 300, axis: 'x' }}>
-		<div class="flex flex-row justify-around m-5 items-baseline">
+	<div class="bg-red-50 h-screen max-w-max" in:slide="{fadeIn}" out:slide="{fadeOut}">
+		
+		<div class="flex flex-row justify-around p-5 items-baseline">
 			<h1 class="font-bold text-xl">Orders</h1>
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">⬅️</button>
 		</div>
@@ -81,11 +99,10 @@
 			<button on:click={() => addOrder()} class="border-2 border-orange-500 rounded-xl p-1">New order</button>
 		</div>
 	</div>
-{/if}
-{#if !showSideBar}
-	<div class="h-screen w-30 fixed left-0 top-0" transition:slide={{ duration: 300, axis: 'x' }}>
+{:else}
+	<div class="h-screen fixed" in:fade="{fadeIn}" out:fade="{fadeOut}">
 		<div class="flex flex-row justify-around m-5 items-baseline">
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">➡️</button>
 		</div>
 	</div>
-{/if}
+{/if} 

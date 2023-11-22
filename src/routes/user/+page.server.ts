@@ -4,16 +4,14 @@ import { ObjectId } from 'bson';
 import type { User } from '$lib/types/user';
 import type { PageServerLoad } from './$types';
 import type { Collection } from 'mongodb';
+import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies }) => {
 	// Get user from session
 	const token = cookies.get('token');
 
 	if (token == null) {
-		return {
-			status: 401,
-			error: 'Token not found'
-		};
+		throw redirect(303, '/login');
 	}
 
 	var userId: string = getUserIDFromToken(token);

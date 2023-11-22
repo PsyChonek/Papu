@@ -9,4 +9,11 @@ export interface LoginForm {
 	password: string;
 }
 
+export interface RegisterForm {
+	username: string;
+	password: string;
+	passwordConfirm: string;
+	email: string;
+}
+
 export const prerender = false;
