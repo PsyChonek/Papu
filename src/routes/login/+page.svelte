@@ -4,21 +4,22 @@
 	import type { ActionData } from './$types';
 	import type { LoginForm, RegisterForm } from './+page';
 
-	export let loginForm: ActionData;
-	export let registerForm: ActionData;
+	export let form: ActionData;
 
-	var loginInputForm: LoginForm = loginForm?.data ?? {
+	var loginInputForm: LoginForm = form?.data as LoginForm ?? {
 		username: '',
 		password: ''
 	};
 
-	var registerInputForm: RegisterForm = registerForm?.data ?? {
+	var registerInputForm: RegisterForm = form?.data as RegisterForm ?? {
 		username: '',
 		email: '',
 		password: '',
 		passwordConfirm: ''
 	};
-	
+
+	var showRegister = true;
+
 	$: loginValidation = validateLoginForm(loginInputForm);
 	$: registerValidation = validateRegisterForm(registerInputForm);
 </script>
@@ -49,8 +50,8 @@
 							<p class="text-red-500 text-center m-0">{error.text}</p>
 						{/each}
 					{/if}
-					{#if form?.errors}
-						{#each form.errors as error}
+					{#if form?.loginErrors}
+						{#each form.loginErrors as error}
 							<p class="text-red-500 text-center m-0">{error.text}</p>
 						{/each}
 					{/if}
@@ -62,6 +63,8 @@
 				</div>
 			</form>
 		</div>
+
+		{#if showRegister}
 		<div class="rounded-xl bg-gray-100 p-5 m-2 mx-auto">
 			<h1 class="font-bold text-4xl text-center mb-8">Register</h1>
 
@@ -91,8 +94,8 @@
 							<p class="text-red-500 text-center m-0">{error.text}</p>
 						{/each}
 					{/if}
-					{#if form?.errors}
-						{#each form.errors as error}
+					{#if form?.registerErrors}
+						{#each form.registerErrors as error}
 							<p class="text-red-500 text-center m-0">{error.text}</p>
 						{/each}
 					{/if}
@@ -104,5 +107,6 @@
 				</div>
 			</form>
 		</div>
+		{/if}
 	</div>
 </div>

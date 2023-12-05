@@ -9,7 +9,9 @@ export class Database {
 		if (!Database.clientInstance) {
 			logger.info(`Connecting to database at ${connectionString}`);
 			try {
-				const client = new MongoClient(connectionString);
+				const client = new MongoClient(connectionString, {
+					connectTimeoutMS: 5000
+				});				
 				await client.connect();
 				Database.clientInstance = client;
 				logger.info('Connected to database');

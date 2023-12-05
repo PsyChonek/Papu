@@ -25,23 +25,33 @@ export const actions = {
 		var clientValidation: Validation = validateLoginForm(input);
 
 		if (!clientValidation.isValid) {
-			return fail(422, { data: input, errors: [{ text: 'Invalid input', type: 'input' }] });
+			logger.debug(`User ${input.username} login attempt failed`);
+			return fail(422, { data: input, loginErrors: [{ text: 'Invalid input', type: 'input' }] });
 		}
 
+		var collection: Collection;
 		// Connect to database
-		const collection: Collection = await Database.getCollection('users');
+		try {
+			collection = await Database.getCollection('users');
+		} catch (error) {
+			logger.error('Failed to connect to database:', error);
+			return fail(500, { data: input, loginErrors: [{ text: 'Failed to connect to database', type: 'input' }] });
+		}
 
 		// Find user with same username
 		var user: User | null = (await collection.findOne({ username: input.username })) as User | null;
 		if (user == null) {
-			return fail(422, { data: input, errors: [{ text: 'User does not exist', type: 'input' }] });
+			logger.debug(`User ${input.username} does not exist`);
+			return fail(422, { data: input, loginErrors: [{ text: 'User does not exist', type: 'input' }] });
 		}
 
 		// Check if password is correct
 		var hash = crypto.pbkdf2Sync(input.password, user.salt, 1000, 64, 'sha512').toString('hex');
 
 		if (hash != user.hash) {
-			return fail(422, { data: input, errors: [{ text: 'Incorrect password', type: 'input' }] });
+			logger.debug(`User ${input.username} incorrect password`);
+			input.password = '';
+			return fail(422, { data: input, loginErrors: [{ text: 'Incorrect password', type: 'input' }] });
 		}
 
 		const TokenPayload: Token = {
@@ -75,7 +85,9 @@ export const actions = {
 		logger.debug(`User ${input.username}, email ${input.email} registration attempt`);
 
 		if (!clientValidation.isValid) {
-			return fail(422, { data: input, errors: [{ text: 'Invalid input', type: 'input' }] });
+			input.password = '';
+			input.passwordConfirm = '';
+			return fail(422, { data: input, registerErrors: [{ text: 'Invalid input', type: 'input' }] });
 		}
 
 		logger.debug(`User ${input.username}, email ${input.email} input valid`);
@@ -85,6 +97,8 @@ export const actions = {
 		// Check if user already exists
 		if ((await collection.findOne({ $or: [{ username: input.username }, { email: input.email }] })) != null) {
 			logger.debug(`User ${input.username}, email ${input.email} already exists`);
+			input.password = '';
+			input.passwordConfirm = '';
 			return fail(422, { data: input, errors: [{ text: 'User already exists', type: 'input' }] });
 		}
 
@@ -108,7 +122,9 @@ export const actions = {
 		// Insert user into database check if user inserted
 		const result = await collection.insertOne(user);
 		if (result.insertedId == null) {
-			return fail(422, { data: input, errors: [{ text: 'Failed to insert user', type: 'input' }] });
+			input.password = '';
+			input.passwordConfirm = '';
+			return fail(422, { data: input, registerErrors: [{ text: 'Failed to insert user', type: 'input' }] });
 		}
 
 		logger.info(`User ${user.username}, email ${user.email}, userID ${user._id} registered`);
