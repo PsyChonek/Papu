@@ -4,9 +4,22 @@ import { orders, orderKeyStore } from '$lib/stores';
 import type { Order } from '$lib/types/order';
 import { generateKey } from '$lib/keys';
 
-export const load = (async ({ url }) => {
-	// Try to load orders from the server
-	// const response = await fetch('/api/orders');
+export const load = (async ({ parent, data, url, fetch }) => {
+	await parent();
+
+	const userData = await fetch('/api/user/get', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}).then(async (response) => {
+		if (response.ok) {
+			const data = await response.json();
+			return data;
+		} else {
+			console.error('Error getting orders', response);
+		}
+	});
 
 	// Load orders from local storage
 	const response = localStorage.getItem('orders');
@@ -64,11 +77,13 @@ export const load = (async ({ url }) => {
 			// Generate a new order
 			orders.update((orders) => {
 				const order: Order = {
+					_id: crypto.randomUUID(),
 					key: generateKey(),
 					date: new Date().toISOString(),
 					other: 0,
 					participants: [],
-					discount: 0
+					discount: 0,
+					ownerID: userData?._id ?? null
 				};
 				orders.push(order);
 				return orders;

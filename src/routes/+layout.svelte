@@ -1,16 +1,18 @@
 <script>
+	import LeftSideBar from '$lib/components/home/leftSideBar.svelte';
+	import Navbar from '$lib/components/navbar.svelte';
 	import '../app.css';
 	import Footer from '../lib/components/footer.svelte';
 </script>
 
 <div class="flex flex-col min-h-screen">
-	<div class=" m-8 mx-auto">
-		<a href="/" class="text-center font-bold text-5xl">Papu</a>
+	<div class="">
+		<Navbar />
 	</div>
-	<div class="m-8 mx-auto">
+	<div class="">
 		<slot />
 	</div>
-	<div class="m-5 mx-auto">
+	<div class="absolute bottom-0 w-full">
 		<Footer />
 	</div>
 </div>

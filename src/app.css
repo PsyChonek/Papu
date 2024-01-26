@@ -12,7 +12,6 @@
 @layer body {
 	body {
 		@apply font-quicksand;
-		max-width: 1200px;
 		margin: 0 auto !important;
 	}
 }

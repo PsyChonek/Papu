@@ -6,14 +6,15 @@
 	import type { Participant, ParticipantItem } from '../types/participant';
 	import { arraySum } from '$lib';
 	import MutantTransition from '../animation/mutantTransition.svelte';
+	import type { ObjectId } from 'mongodb';
 
 	export let participant: Participant;
 	export let discount: number = 0;
 	export let split: number = 0;
 
-	export let removeParticipant: (id: string) => void;
+	export let removeParticipant: (id: string | ObjectId) => void;
 
-	const createItem = (): ParticipantItem => ({ id: crypto.randomUUID() });
+	const createItem = (): ParticipantItem => ({ _id: crypto.randomUUID() });
 	let defaultItem: ParticipantItem = createItem();
 
 	// add new item
@@ -39,15 +40,15 @@
 </script>
 
 <div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
-	<button class="rounded-lg bg-orange-400 text-white p-2 w-full" on:click={() => removeParticipant(participant.id)}>Remove</button>
+	<button class="rounded-lg bg-orange-400 text-white p-2 w-full" on:click={() => removeParticipant(participant._id)}>Remove</button>
 	<h1 class="font-bold text-lg">{participant.name}</h1>
 	<!-- Rounded border for canvas -->
 	<div class="outline outline-orange-200 outline-offset-0 rounded-xl">
 		<!-- QR code on load generate -->
 		<CanvasQrCode data={qrCodeData} />
 	</div>
-	<h1 class="font-bold text-lg"><FunkyNumber value={participant.total}/> Kč</h1>
-	{#each items as { id, price } (id)}
+	<h1 class="font-bold text-lg"><FunkyNumber value={participant.total} /> Kč</h1>
+	{#each items as { _id, price } (_id)}
 		<MutantTransition>
 			<input
 				bind:value={price}
@@ -60,5 +61,4 @@
 			/>
 		</MutantTransition>
 	{/each}
-
 </div>
