@@ -4,6 +4,8 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
 export const POST: RequestHandler = async ({ request, url }) => {
+	console.log('POST', url.pathname);
+
 	// Parse the request body as JSON
 	const body = JSON.parse(await request.text()) as Order[];
 
