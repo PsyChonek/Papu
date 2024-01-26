@@ -1,8 +1,8 @@
 version: '3.8'
-
+name: papu
 services:
   papu:
-    container_name: papu
+    container_name: papu_app
     image: papu
     ports:
       - 3010:3000
@@ -13,7 +13,7 @@ services:
       - papu-network
 
   mongo:
-    container_name: papudb
+    container_name: papu_mongo
     image: mongo
     restart: always
     environment:
