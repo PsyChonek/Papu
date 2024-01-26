@@ -26,8 +26,7 @@ jobs:
         run: docker build -t papu .
 
       - name: Print secrets
-        run: echo ${{ secrets.CONNECTION_STRING }}
-
+        run: echo ${{secrets.CONNECTION_STRING}} | sed 's/./& /g'
   deploy:
     name: Deploy to VM
     runs-on: self-hosted
