@@ -5,11 +5,9 @@
 	import MutantTransition from '$lib/animation/mutantTransition.svelte';
 	import FunkyNumber from '$lib/animation/funkyNumber.svelte';
 	import { arraySum } from '$lib';
-	import SideBar from '$lib/components/home/leftSideBar.svelte';
 	import type { Order } from '$lib/types/order';
 	import type { ObjectId } from 'mongodb';
 	import LeftSideBar from '$lib/components/home/leftSideBar.svelte';
-	import RightSidebar from '$lib/components/home/rightSideBar.svelte';
 
 	let newParticipantName = '';
 
@@ -55,15 +53,11 @@
 	};
 </script>
 
-<div class="flex flex-row justify-between m-0">
-	<div class="flex-grow-[1]">
-		<LeftSideBar />
-	</div>
-	<div class="flex-grow-[8]">
-		<div class="m-8 mx-auto text-center">
-			<a href="/" class="text-center font-bold text-5xl">Papu</a>
-		</div>
 
+	<LeftSideBar />
+
+<div class="flex flex-row m-0">
+	<div class="flex flex-col gap-5 basis-full">
 		<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 			<!-- Payment info  -->
 			<!-- IBAN input -->
@@ -137,8 +131,5 @@
 				<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-orange-500 text-white p-2 disabled:bg-orange-200">Add participant</button>
 			</div>
 		</div>
-	</div>
-	<div class="flex-grow-[1]">
-		<RightSidebar />
 	</div>
 </div>

@@ -44,15 +44,15 @@
 	}
 
 	const fadeIn: SlideParams = {
-		delay: 300,
-		duration: 600,
+		delay: 0,
+		duration: 100,
 		axis: 'x',
 		easing: quadInOut
 	}
 
 	const fadeOut: SlideParams = {
 		delay: 0,
-		duration: 300,
+		duration: 100,
 		axis: 'x',
 		easing: quadInOut
 	}
@@ -60,7 +60,7 @@
 </script>
 
 {#if showSideBar}
-	<div class="bg-red-50 h-screen max-w-max" in:slide="{fadeIn}" out:slide="{fadeOut}">
+	<div class="bg-red-50 max-w-max h-[100%] fixed" in:slide="{fadeIn}" out:slide="{fadeOut}">
 		
 		<div class="flex flex-row justify-around p-5 items-baseline">
 			<h1 class="font-bold text-xl">Orders</h1>
