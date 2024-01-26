@@ -6,6 +6,10 @@
 
 Easy to use app for creating qr codes for payments. Split the bill with your friends. No more calculating who owes what. Just enter the amount and the app will generate a qr code for you. Maybe track payments in the future. Show a list of payments. Maybe even order food from a restaurant.
 
+## Design
+
+Figma <https://www.figma.com/file/cZUVgQmlWVU8qee804aJkq/Papu?type=design&node-id=2%3A5&mode=design&t=LY9qFN2pTo0R9HXC-1>
+
 ## Deployment
 
 - Github Actions
@@ -70,9 +74,9 @@ Possible to run locally: `docker compose up`
 - [x] Add user items
 - [x] Calculate user items
 - [x] Generate QR code
-- [ ] Store orders locally to be able to restore them after refresh, or getting back to previous orders.
-- [ ] Add calc to all field to be able sum delivery and tip.
-- [ ] Add sale prec to user input. Some foods are not in sale and some are.
+- [X] Store orders locally to be able to restore them after refresh, or getting back to previous orders.
+- [X] Add calc to all field to be able sum delivery and tip.
+- [X] Add sale prec to user input. Some foods are not in sale and some are.
 - [ ] Add sync with server. If user is logged in, sync orders with server.
 - [ ] Add sync with other users. If user is logged in, sync orders with other users.
 - [ ] Check payment status. If payment is done, mark it as paid.
@@ -85,8 +89,8 @@ Possible to run locally: `docker compose up`
 - [ ] Add reset password
 - [ ] Add email verification
 - [ ] Add social login
-- [ ] Animate form
-- [ ] Validate form (email, password)
+- [X] Animate form
+- [X] Validate form (email, password)
 
 ### Profile
 
