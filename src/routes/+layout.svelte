@@ -1,4 +1,5 @@
 <script>
+	import LeftSideBar from '$lib/components/home/leftSideBar.svelte';
 	import Navbar from '$lib/components/navbar.svelte';
 	import '../app.css';
 	import Footer from '../lib/components/footer.svelte';

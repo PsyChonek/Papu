@@ -5,7 +5,7 @@
 	id / _id: id is used for the client, _id is used for the database, it is stupid but it works
 */
 
-import type { ObjectId } from "mongodb";
+import type { ObjectId } from 'mongodb';
 
 export interface Participant {
 	_id: ObjectId | string;

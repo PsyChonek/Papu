@@ -11,7 +11,7 @@ export class Database {
 			try {
 				const client = new MongoClient(connectionString, {
 					connectTimeoutMS: 5000
-				});				
+				});
 				await client.connect();
 				Database.clientInstance = client;
 				logger.info('Connected to database');

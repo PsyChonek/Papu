@@ -47,7 +47,7 @@
 		<!-- QR code on load generate -->
 		<CanvasQrCode data={qrCodeData} />
 	</div>
-	<h1 class="font-bold text-lg"><FunkyNumber value={participant.total}/> Kč</h1>
+	<h1 class="font-bold text-lg"><FunkyNumber value={participant.total} /> Kč</h1>
 	{#each items as { _id, price } (_id)}
 		<MutantTransition>
 			<input
@@ -61,5 +61,4 @@
 			/>
 		</MutantTransition>
 	{/each}
-
 </div>

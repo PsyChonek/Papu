@@ -53,8 +53,7 @@
 	};
 </script>
 
-
-	<LeftSideBar />
+<LeftSideBar />
 
 <div class="flex flex-row m-0">
 	<div class="flex flex-col gap-5 basis-full">
