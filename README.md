@@ -74,9 +74,9 @@ Possible to run locally: `docker compose up`
 - [x] Add user items
 - [x] Calculate user items
 - [x] Generate QR code
-- [X] Store orders locally to be able to restore them after refresh, or getting back to previous orders.
-- [X] Add calc to all field to be able sum delivery and tip.
-- [X] Add sale prec to user input. Some foods are not in sale and some are.
+- [x] Store orders locally to be able to restore them after refresh, or getting back to previous orders.
+- [x] Add calc to all field to be able sum delivery and tip.
+- [x] Add sale prec to user input. Some foods are not in sale and some are.
 - [ ] Add sync with server. If user is logged in, sync orders with server.
 - [ ] Add sync with other users. If user is logged in, sync orders with other users.
 - [ ] Check payment status. If payment is done, mark it as paid.
@@ -89,8 +89,8 @@ Possible to run locally: `docker compose up`
 - [ ] Add reset password
 - [ ] Add email verification
 - [ ] Add social login
-- [X] Animate form
-- [X] Validate form (email, password)
+- [x] Animate form
+- [x] Validate form (email, password)
 
 ### Profile
 

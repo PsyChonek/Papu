@@ -30,7 +30,8 @@
 			date: new Date().toISOString(),
 			other: 0,
 			participants: [],
-			discount: 0
+			discount: 0,
+			ownerID: null
 		};
 		orders.set([...$orders, order]);
 	}
@@ -44,7 +45,7 @@
 	}
 
 	const fadeIn: SlideParams = {
-		delay: 0,
+		delay: 100,
 		duration: 100,
 		axis: 'x',
 		easing: quadInOut
@@ -59,7 +60,7 @@
 </script>
 
 {#if showSideBar}
-	<div class="bg-red-50 max-w-max h-[100%] fixed" in:slide={fadeIn} out:slide={fadeOut}>
+	<div class="bg-red-50 h-full" in:slide={fadeIn} out:slide={fadeOut}>
 		<div class="flex flex-row justify-around p-5 items-baseline">
 			<h1 class="font-bold text-xl">Orders</h1>
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">⬅️</button>
@@ -98,7 +99,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="h-screen fixed" in:fade={fadeIn} out:fade={fadeOut}>
+	<div class="" in:fade={fadeIn} out:fade={fadeOut}>
 		<div class="flex flex-row justify-around m-5 items-baseline">
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">➡️</button>
 		</div>

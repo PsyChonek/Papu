@@ -2,17 +2,13 @@
 	import LeftSideBar from '$lib/components/home/leftSideBar.svelte';
 	import Navbar from '$lib/components/navbar.svelte';
 	import '../app.css';
-	import Footer from '../lib/components/footer.svelte';
 </script>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex flex-col h-full">
 	<div class="">
 		<Navbar />
 	</div>
-	<div class="">
+	<div class="h-full">
 		<slot />
-	</div>
-	<div class="absolute bottom-0 w-full">
-		<Footer />
 	</div>
 </div>
