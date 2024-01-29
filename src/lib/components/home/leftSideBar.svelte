@@ -100,7 +100,7 @@
 	</div>
 {:else}
 	<div class="" in:fade={fadeIn} out:fade={fadeOut}>
-		<div class="flex flex-row justify-around m-5 items-baseline">
+		<div class="flex flex-row m-5 items-baseline">
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">➡️</button>
 		</div>
 	</div>

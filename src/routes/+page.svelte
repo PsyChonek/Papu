@@ -54,9 +54,9 @@
 	};
 </script>
 
-<div class="grid grid-cols-[260px_65%_260px] justify-between min-h-full">
+<div class="grid grid-cols-[15%_65%_15%] justify-between min-h-full">
 	<!-- Fixed width -->
-	<div class="max-h-full overflow-hidden">
+	<div class="w-full overflow-hidden">
 		<LeftSideBar />
 	</div>
 
