@@ -3,6 +3,9 @@
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
+
+	import { isLoggedIn } from '$lib/stores';
+	isLoggedIn.update(() => data.isLoggedIn);
 </script>
 
 <div class="flex flex-col justify-between h-full">

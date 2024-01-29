@@ -184,3 +184,27 @@ function createOrderKeyStore(): Writable<string> {
 }
 
 export const orderKeyStore = createOrderKeyStore();
+
+function createIsLoggedIn(): Writable<boolean> {
+	const { subscribe, set, update } = writable(false);
+
+	return {
+		subscribe,
+		set,
+		update
+	};
+}
+
+export const isLoggedIn = createIsLoggedIn();
+
+function createUserId(): Writable<string | null> {
+	const { subscribe, set, update } = writable(null);
+
+	return {
+		subscribe,
+		set,
+		update
+	};
+}
+
+export const userId = createUserId();

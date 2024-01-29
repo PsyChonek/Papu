@@ -2,7 +2,7 @@
 	import { quadInOut } from 'svelte/easing';
 	import { arraySum } from '$lib';
 	import { generateKey } from '$lib/keys';
-	import { orders, orderKeyStore } from '$lib/stores';
+	import { orders, orderKeyStore, userId } from '$lib/stores';
 	import type { Order } from '$lib/types/order';
 	import { fade, slide, type SlideParams } from 'svelte/transition';
 
@@ -31,7 +31,7 @@
 			other: 0,
 			participants: [],
 			discount: 0,
-			ownerID: null
+			ownerID: $userId
 		};
 		orders.set([...$orders, order]);
 	}
@@ -66,7 +66,6 @@
 			<button on:click={() => (showSideBar = !showSideBar)} class="border-2 border-orange-500 rounded-xl p-1">⬅️</button>
 		</div>
 
-		<!-- Place reverse order -->
 		{#each $orders.sort(orderOrdersByDate) as order}
 			<div class="flex flex-row justify-between rounded-xl p-2 px-4 items-center gap-2">
 				<button

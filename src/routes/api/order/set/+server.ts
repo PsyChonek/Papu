@@ -1,10 +1,18 @@
+import { verifyToken } from '$lib/server/auth';
 import { Database } from '$lib/server/database';
+import { logger } from '$lib/server/logger';
 import type { Order } from '$lib/types/order';
 import type { RequestHandler } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
-export const POST: RequestHandler = async ({ request, url }) => {
-	console.log('POST', url.pathname);
+export const POST: RequestHandler = async ({ request, url, cookies }) => {
+	logger.debug('POST - Order->Set', url.pathname);
+
+	// validate token
+	const token = cookies.get('token');
+	if (!token || !verifyToken(token)) {
+		return new Response('Unauthorized', { status: 401 });
+	}
 
 	// Parse the request body as JSON
 	const body = JSON.parse(await request.text()) as Order[];

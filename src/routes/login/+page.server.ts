@@ -10,6 +10,7 @@ import { createToken, type Token } from '$lib/server/auth';
 import { createSession } from '$lib/server/session';
 import { logger } from '$lib/server/logger';
 import { ObjectId, type Collection } from 'mongodb';
+import { isLoggedIn } from '$lib/stores';
 
 export const actions = {
 	login: async ({ request, cookies }) => {

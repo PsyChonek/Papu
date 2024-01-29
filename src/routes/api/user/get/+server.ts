@@ -1,16 +1,16 @@
-import { getUserIDFromToken } from '$lib/server/auth';
+import { getUserIDFromToken, verifyToken } from '$lib/server/auth';
 import { Database } from '$lib/server/database';
 import type { User } from '$lib/types/user';
 import { Collection, ObjectId } from 'mongodb';
 import type { RequestHandler } from '@sveltejs/kit';
+import { logger } from '$lib/server/logger';
 
 export const GET: RequestHandler = async ({ request, url, cookies }) => {
-	console.log('GET', url.pathname);
+	logger.debug('GET - User->Get', url.pathname);
 	// Get user from session
 	const token = cookies.get('token');
-
-	if (token == null) {
-		return new Response(JSON.stringify({ status: 401, error: 'Invalid token' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+	if (!token || !verifyToken(token)) {
+		return new Response('Unauthorized', { status: 401 });
 	}
 
 	var userId: string = getUserIDFromToken(token);
