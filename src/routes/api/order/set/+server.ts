@@ -5,14 +5,9 @@ import type { Order } from '$lib/types/order';
 import type { RequestHandler } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
-export const POST: RequestHandler = async ({ request, url, cookies }) => {
+export const POST: RequestHandler = async ({ request, url }) => {
 	logger.debug('POST - Order->Set', url.pathname);
 
-	// validate token
-	const token = cookies.get('token');
-	if (!token || !verifyToken(token)) {
-		return new Response('Unauthorized', { status: 401 });
-	}
 
 	// Parse the request body as JSON
 	const body = JSON.parse(await request.text()) as Order[];
@@ -21,6 +16,9 @@ export const POST: RequestHandler = async ({ request, url, cookies }) => {
 
 	// Update or insert the order
 	for (const order of body) {
+		order._id = new ObjectId(order._id);
+
+
 		if (!ObjectId.isValid(order._id)) {
 			order._id = new ObjectId();
 		}
@@ -37,7 +35,7 @@ export const POST: RequestHandler = async ({ request, url, cookies }) => {
 			}
 		}
 
-		await collection.updateOne({ _id: order._id as ObjectId }, { $set: order }, { upsert: true });
+		await collection.updateOne({ _id: order._id },  { $set: order },{ upsert: true });
 	}
 
 	// Return a 200 OK and body
