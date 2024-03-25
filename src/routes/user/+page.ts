@@ -1,3 +1,4 @@
+import { isLoggedIn } from '$lib/stores';
 import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
@@ -15,6 +16,8 @@ export const load = (async ({ fetch }) => {
 			console.error('Error getting orders', response);
 		}
 	});
+
+	isLoggedIn.set(userData?._id != null);
 
 	return {
 		User: userData

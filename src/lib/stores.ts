@@ -118,21 +118,28 @@ function createOrders(): Writable<Order[]> {
 	 * @param orders - The order to save to the database.
 	 */
 	const saveOrdersToDb = async (orders: Order[]) => {
-		const response = await fetch('/api/order/set', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(orders)
+		userId.subscribe(async (userId) => {
+			if (userId){
+				orders.map((order) => {
+					order.ownerID = userId;
+			});}
+
+			const response = await fetch('/api/order/set', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(orders)
+			});
+			if (response.ok) {
+				const result: Order[] = await response.json();
+				// Update the orders with the _id from the database
+				localStorage.setItem(key, JSON.stringify(result));
+				console.log('Orders saved to database', result);
+			} else {
+				console.error('Order not saved to database', response);
+			}
 		});
-		if (response.ok) {
-			const result: Order[] = await response.json();
-			// Update the orders with the _id from the database
-			localStorage.setItem(key, JSON.stringify(result));
-			console.log('Order saved to database', result);
-		} else {
-			console.error('Order not saved to database', response);
-		}
 	};
 
 	/**
@@ -185,26 +192,5 @@ function createOrderKeyStore(): Writable<string> {
 
 export const orderKeyStore = createOrderKeyStore();
 
-function createIsLoggedIn(): Writable<boolean> {
-	const { subscribe, set, update } = writable(false);
-
-	return {
-		subscribe,
-		set,
-		update
-	};
-}
-
-export const isLoggedIn = createIsLoggedIn();
-
-function createUserId(): Writable<string | null> {
-	const { subscribe, set, update } = writable(null);
-
-	return {
-		subscribe,
-		set,
-		update
-	};
-}
-
-export const userId = createUserId();
+export const isLoggedIn = writable(false);
+export const userId = writable(null);
