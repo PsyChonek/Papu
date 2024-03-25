@@ -119,7 +119,8 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 					other: 0,
 					participants: [],
 					discount: 0,
-					ownerID: userData?._id ?? null
+					ownerID: userData?._id ?? null,
+					isDeleted: false
 				};
 				orders.push(order);
 				return orders;

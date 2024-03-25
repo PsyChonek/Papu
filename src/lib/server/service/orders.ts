@@ -6,6 +6,9 @@ import { Database } from '../database';
 
 export const loadOrderUser = async (userId: string): Promise<Order[]> => {
 	const collection: Collection = await Database.getCollection('orders');
-	const orders: Order[] | null = (await collection.find({ ownerID: new ObjectId(userId) }).toArray()) as Order[];
+
+	// Filter out orders in state isDeleted=true
+
+	const orders: Order[] | null = (await collection.find({ ownerID: new ObjectId(userId), isDeleted:0 }).toArray()) as Order[];
 	return orders??[];
 };

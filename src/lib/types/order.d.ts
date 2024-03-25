@@ -9,4 +9,5 @@ export interface Order {
 	other: number;
 	discount: number;
 	participants: Participant[];
+	isDeleted?: boolean;
 }

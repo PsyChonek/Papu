@@ -7,7 +7,7 @@ import { verifyToken } from '$lib/server/auth';
 
 
 export const GET: RequestHandler = async ({ request, url, cookies }) => {
-    logger.debug('GET - Auth->Get', url.pathname);
+    logger.debug('GET - Auth->Get - '+ url.pathname);
 
     // Get user from session
     const token = cookies.get('token');

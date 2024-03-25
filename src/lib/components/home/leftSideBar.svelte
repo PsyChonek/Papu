@@ -5,6 +5,7 @@
 	import { orders, orderKeyStore, userId } from '$lib/stores';
 	import type { Order } from '$lib/types/order';
 	import { fade, slide, type SlideParams } from 'svelte/transition';
+	import { enhance } from '$app/forms';
 
 	var showSideBar = true;
 
@@ -20,6 +21,15 @@
 
 	// Remove order from orders store
 	function removeOrder(key: string) {
+		const orderIdToDelete = $orders.find((order) => order.key === key)?._id;
+
+		if (orderIdToDelete) {
+			// Send delete request to server
+			fetch(`/api/order/delete/${orderIdToDelete}`, {
+				method: 'DELETE'
+			});
+		}
+
 		orders.set($orders.filter((order) => order.key !== key));
 	}
 
@@ -33,6 +43,7 @@
 			discount: 0,
 			ownerID: $userId
 		};
+
 		orders.set([...$orders, order]);
 	}
 
