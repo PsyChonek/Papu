@@ -4,8 +4,9 @@ import type { User } from '$lib/types/user';
 import { Collection, ObjectId } from 'mongodb';
 import type { RequestHandler } from '@sveltejs/kit';
 import { logger } from '$lib/server/logger';
+import { getUser } from '$lib/server/service/users';
 
-export const GET: RequestHandler = async ({ request, url, cookies }) => {
+export const GET: RequestHandler = async ({ url, cookies }) => {
 	logger.debug('GET - User->Get', url.pathname);
 	// Get user from session
 	const token = cookies.get('token');
@@ -19,10 +20,7 @@ export const GET: RequestHandler = async ({ request, url, cookies }) => {
 		return new Response(JSON.stringify({ status: 401, error: 'Invalid token' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
 	}
 
-	const collection: Collection = await Database.getCollection('users');
-
-	// Find user with same username
-	var user: User | null = (await collection.findOne({ _id: new ObjectId(userId) })) as User | null;
+	const user = await getUser(userId);
 
 	return new Response(JSON.stringify(user), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };

@@ -1,38 +1,74 @@
 import { browser } from '$app/environment';
 import type { PageLoad } from './$types';
-import { orders, orderKeyStore } from '$lib/stores';
+import { orders, orderKeyStore, isLoggedIn, userId } from '$lib/stores';
 import type { Order } from '$lib/types/order';
 import { generateKey } from '$lib/keys';
 
-export const load = (async ({ parent, data, url, fetch }) => {
-	await parent();
+export const load: PageLoad = async ({ parent, data, url, fetch }) => {
+	isLoggedIn.set(data.isLoggedIn);
 
-	const userData = await fetch('/api/user/get', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	}).then(async (response) => {
-		if (response.ok) {
-			const data = await response.json();
-			return data;
-		} else {
-			console.error('Error getting orders', response);
-		}
-	});
+	let userData = null;
+
+	// Check if token exists
+	if (data.isLoggedIn && data.isLoggedIn != undefined) {
+		userData = await fetch('/api/user/get', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}).then(async (response) => {
+			if (response.ok) {
+				const data = await response.json();
+				return data;
+			} else {
+				console.error('Error getting orders', response);
+			}
+		});
+
+		userId.set(userData?._id);
+	}
 
 	// Load orders from local storage
 	const response = localStorage.getItem('orders');
 	if (response) {
 		// Try to parse the response
-		let data: Order[] = [];
+		let serverOrders: Order[] = JSON.parse(data.orders) as Order[];
+		let localOrders: Order[] = [];
 		try {
-			data = JSON.parse(response);
+			localOrders = JSON.parse(response) as Order[];
 		} catch (e) {
 			console.error('Error parsing orders', e);
 		}
 
-		orders.set(data);
+		// Merge the orders
+		const mergedOrders: Order[] = [];
+		
+		localOrders.forEach((localOrder) => {
+			let found = false;
+			serverOrders.forEach((serverOrder) => {
+				if (localOrder.key === serverOrder.key) {
+					mergedOrders.push(serverOrder);
+					found = true;
+				}
+			});
+			if (!found) {
+				mergedOrders.push(localOrder);
+			}
+		});
+
+		serverOrders.forEach((serverOrder) => {
+			let found = false;
+			mergedOrders.forEach((mergedOrder) => {
+				if (serverOrder.key === mergedOrder.key) {
+					found = true;
+				}
+			});
+			if (!found) {
+				mergedOrders.push(serverOrder);
+			}
+		});
+
+		orders.set(mergedOrders);
 	}
 
 	var orderKey: string | null = null;
@@ -77,7 +113,7 @@ export const load = (async ({ parent, data, url, fetch }) => {
 			// Generate a new order
 			orders.update((orders) => {
 				const order: Order = {
-					_id: crypto.randomUUID(),
+					_id: null,
 					key: generateKey(),
 					date: new Date().toISOString(),
 					other: 0,
@@ -107,4 +143,4 @@ export const load = (async ({ parent, data, url, fetch }) => {
 	}
 
 	return {};
-}) satisfies PageLoad;
+};

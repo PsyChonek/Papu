@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isLoggedIn } from '$lib/stores';
+	import { isLoggedIn } from "$lib/stores";
 </script>
 
 <div>
