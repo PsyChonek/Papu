@@ -23,10 +23,7 @@ export const DELETE: RequestHandler = async ({ url ,request, cookies,route, para
         return new Response('Order not found', { status: 404 });
     }
 
-    // update order status isDeleted = true
-
-    await collection.updateOne({ _id: new ObjectId(orderId) }, { $set: { isDeleted: true } });
-    // await collection.deleteOne({ _id: new ObjectId(orderId) });
+    await collection.updateOne({ _id: new ObjectId(orderId) },{ $set: { isDeleted: true }});
 
     return new Response('Order deleted', { status: 200 });
 }

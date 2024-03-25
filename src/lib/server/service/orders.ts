@@ -9,6 +9,6 @@ export const loadOrderUser = async (userId: string): Promise<Order[]> => {
 
 	// Filter out orders in state isDeleted=true
 
-	const orders: Order[] | null = (await collection.find({ ownerID: new ObjectId(userId), isDeleted:0 }).toArray()) as Order[];
+	const orders: Order[] | null = (await collection.find({ ownerID: new ObjectId(userId), isDeleted:false }).toArray()) as Order[];
 	return orders??[];
 };

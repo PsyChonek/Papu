@@ -41,7 +41,8 @@
 			other: 0,
 			participants: [],
 			discount: 0,
-			ownerID: $userId
+			ownerID: $userId,
+			isDeleted: false
 		};
 
 		orders.set([...$orders, order]);
