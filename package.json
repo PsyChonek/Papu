@@ -44,11 +44,14 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@novu/node": "^0.24.1",
+		"@slack/web-api": "^7.0.4",
 		"@types/jsonwebtoken": "^9.0.3",
 		"@types/qrcode": "^1.5.1",
 		"dotenv": "^16.3.1",
 		"jsonwebtoken": "^9.0.2",
 		"mongodb": "^6.1.0",
+		"novu": "^0.24.1",
 		"qrcode": "^1.5.3",
 		"winston": "^3.10.0"
 	}

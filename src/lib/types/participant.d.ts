@@ -14,6 +14,7 @@ export interface Participant {
 	items: ParticipantItem[];
 	total: number;
 	nonDiscountedTotal: number;
+	variableSymbol: string;
 }
 
 /* Participant Item, represents an item in the participant's order  */

@@ -2,6 +2,8 @@ import { getUserIDFromToken, verifyToken } from '$lib/server/auth';
 import { loadOrderUser } from '$lib/server/service/orders';
 import type { Order } from '$lib/types/order';
 import type { PageServerLoad } from './$types';
+import { SendSlackMessage } from '$lib/server/messenger';
+import type { Participant } from '$lib/types/participant';
 
 export const load = (async (cookies) => {
 	const token = cookies.cookies.get('token');
@@ -18,5 +20,15 @@ export const load = (async (cookies) => {
 		cookies.cookies.delete('session', { path: '/', secure: true, sameSite: 'strict' });
 	}
 
-	return { isLoggedIn: isLoggedIn, orders: JSON.stringify(orders)};
+	return { isLoggedIn: isLoggedIn, orders: JSON.stringify(orders) };
 }) satisfies PageServerLoad;
+
+export const actions = {
+	sendToSlack: async ({ request }) => {
+		const formData = await request.formData();
+		const participants = formData.get('participants') as string;
+
+		// Create image with participants
+		SendSlackMessage('image', participants);
+	}
+};

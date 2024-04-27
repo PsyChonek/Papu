@@ -1,7 +1,7 @@
 import { logger } from '$lib/server/logger';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({cookies,url}) => {
+export const GET: RequestHandler = async ({ cookies, url }) => {
 	logger.debug('GET User->Logout -' + url.pathname);
 
 	// Delete the cookies

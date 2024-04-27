@@ -36,7 +36,7 @@
 	$: participant.total = Math.ceil(participant.nonDiscountedTotal * (1 - discount / 100) + split);
 
 	// update qrCode from total
-	$: qrCodeData = $iban && participant.total > 0 ? paymentData($iban, participant.total, `Payment for ${participant.name} from Papu`) : null;
+	$: qrCodeData = $iban && participant.total > 0 ? paymentData($iban, participant.total, `Payment for ${participant.name} from Papu`, participant.variableSymbol) : null;
 </script>
 
 <div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">

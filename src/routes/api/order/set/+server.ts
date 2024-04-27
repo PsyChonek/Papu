@@ -6,7 +6,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
 export const POST: RequestHandler = async ({ request, url }) => {
-	logger.debug('POST - Order->Set - '+ url.pathname);
+	logger.debug('POST - Order->Set - ' + url.pathname);
 
 	// Parse the request body as JSON
 	const body = JSON.parse(await request.text()) as Order[];

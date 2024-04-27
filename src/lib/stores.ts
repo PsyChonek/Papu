@@ -119,10 +119,11 @@ function createOrders(): Writable<Order[]> {
 	 */
 	const saveOrdersToDb = async (orders: Order[]) => {
 		userId.subscribe(async (userId) => {
-			if (userId){
+			if (userId) {
 				orders.map((order) => {
 					order.ownerID = userId;
-			});}
+				});
+			}
 
 			const response = await fetch('/api/order/set', {
 				method: 'POST',

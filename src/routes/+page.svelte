@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { generateQRCode } from '$lib/slackImage';
 	import type { Participant } from '$lib/types/participant';
 	import { iban, orders, orderKeyStore } from '$lib/stores';
 	import ParticipantInfo from '../lib/components/participantInfo.svelte';
@@ -25,6 +26,7 @@
 
 		const participant: Participant = {
 			_id: crypto.randomUUID(),
+			variableSymbol: crypto.randomUUID(),
 			name: newParticipantName,
 			total: 0,
 			nonDiscountedTotal: 0,
@@ -52,6 +54,22 @@
 		event.target.value = value;
 		iban.set(value);
 	};
+
+	$: slackImage = generateQRCode(activeOrder.participants, $iban || '');
+
+
+// Function to convert data URL to Blob
+function dataURLToBlob(dataURL:string) : Blob{
+    var byteString = atob(dataURL.split(',')[1]);
+    var mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], { type: mimeString });
+    return blob;
+}
 </script>
 
 <div class="grid grid-cols-[290px_65%_290px] justify-between min-h-full">
@@ -119,7 +137,7 @@
 					{/each}
 				</div>
 
-				<div class="m-auto flex flex-col gap-2 max-w-[200px]">
+				<div class="m-auto flex flex-col gap-2 max-w-[200px] items-center">
 					<!-- Participant name input -->
 					<input
 						type="text"
@@ -131,8 +149,35 @@
 						}}
 					/>
 
+					<!-- Test button to send slack message -->
+					<!-- <form method="post" action="?/sendToSlack" class="flex flex-row justify-center gap-5" use:enhance>
+						{#await slackImage}
+							<p>Loading...</p>
+						{:then generatedImage}
+							<input name="participants" value={generatedImage} />
+							<button type="submit" class="rounded-lg bg-orange-500 text-white p-2 w-60">Send slack message</button>
+						{:catch error}
+							<p>Error: {error.message}</p>
+						{/await}
+					</form> -->
 					<!-- Add participant button -->
 					<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-orange-500 text-white p-2 disabled:bg-orange-200">Add participant</button>
+					{#await slackImage}
+					<p>Loading...</p>
+					{:then generatedImage}
+						<input style="display: none;" name="participants" value={generatedImage} />
+						<button on:click={
+							() => {
+								// Uri to blob and then to clipboard
+								var blob = dataURLToBlob(generatedImage);
+								const item = new ClipboardItem({ 'image/png': blob });
+								navigator.clipboard.write([item]);
+							}
+						
+						} class="rounded-lg bg-orange-500 text-white p-2 w-60">Copy Image to clipboard</button>
+					{:catch error}
+						<p>Error: {error.message}</p>
+					{/await}
 				</div>
 			</div>
 		</div>

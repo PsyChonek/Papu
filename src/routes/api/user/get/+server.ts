@@ -7,7 +7,7 @@ import { logger } from '$lib/server/logger';
 import { getUser } from '$lib/server/service/users';
 
 export const GET: RequestHandler = async ({ url, cookies }) => {
-	logger.debug('GET - User->Get - '+ url.pathname);
+	logger.debug('GET - User->Get - ' + url.pathname);
 	// Get user from session
 	const token = cookies.get('token');
 	if (!token || !verifyToken(token)) {

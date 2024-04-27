@@ -3,7 +3,7 @@ import { logger } from '$lib/server/logger';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ url, cookies }) => {
-	logger.debug('POST - Order->Get - '+ url.pathname);
+	logger.debug('POST - Order->Get - ' + url.pathname);
 
 	// validate token
 	const token = cookies.get('token');

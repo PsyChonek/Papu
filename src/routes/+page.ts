@@ -42,7 +42,7 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 
 		// Merge the orders
 		const mergedOrders: Order[] = [];
-		
+
 		localOrders.forEach((localOrder) => {
 			let found = false;
 			serverOrders.forEach((serverOrder) => {
