@@ -23,6 +23,7 @@ jobs:
         env:
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          SLACK_API_TOKEN: ${{ secrets.SLACK_API_TOKEN }}
         run: ./scripts/replace_env.sh
 
       - name: Run docker build
