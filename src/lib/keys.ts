@@ -12,7 +12,7 @@ export function generateKey(length: number = 6, chars: string = 'ABCDEFGHIJKLMNO
 	return key;
 }
 
-export function generateVS(length: number = 9, chars: string = '0123456789') {
+export function generateVS(length: number = 10, chars: string = '0123456789') {
 	let key = '';
 
 	for (let i = 0; i < length; i++) {
