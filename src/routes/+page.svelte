@@ -10,6 +10,7 @@
 	import type { ObjectId } from 'mongodb';
 	import LeftSideBar from '$lib/components/home/leftSideBar.svelte';
 	import Footer from '../lib/components/footer.svelte';
+	import { generateVS } from '$lib/keys';
 
 	let newParticipantName = '';
 
@@ -26,7 +27,7 @@
 
 		const participant: Participant = {
 			_id: crypto.randomUUID(),
-			variableSymbol: crypto.randomUUID(),
+			variableSymbol: generateVS(),
 			name: newParticipantName,
 			total: 0,
 			nonDiscountedTotal: 0,
