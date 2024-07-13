@@ -41,7 +41,7 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 		}
 
 		// Merge the orders
-		const mergedOrders: Order[] = [...serverOrders];
+		const mergedOrders: Order[] = [];
 
 		serverOrders.forEach((order) => {
 			if (!mergedOrders.some((o) => o.key === order.key)) {
