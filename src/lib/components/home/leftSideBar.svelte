@@ -5,7 +5,6 @@
 	import { orders, orderKeyStore, userId } from '$lib/stores';
 	import type { Order } from '$lib/types/order';
 	import { fade, slide, type SlideParams } from 'svelte/transition';
-	import { enhance } from '$app/forms';
 
 	var showSideBar = true;
 
@@ -16,7 +15,9 @@
 
 	function timeFormat(date: string): string {
 		const d = new Date(date);
-		return `${d.getHours()}:${d.getMinutes()}`;
+		const hours = d.getHours().toString().padStart(2, '0');
+		const minutes = d.getMinutes().toString().padStart(2, '0');
+		return `${hours}:${minutes}`;
 	}
 
 	// Remove order from orders store

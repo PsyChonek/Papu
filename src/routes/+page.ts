@@ -43,17 +43,21 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 		// Merge the orders
 		const mergedOrders: Order[] = [];
 
-		serverOrders.forEach((order) => {
-			if (!mergedOrders.some((o) => o.key === order.key)) {
-				mergedOrders.push(order);
-			}
-		});
+		if (serverOrders.length !== 0) {
+			serverOrders.forEach((order) => {
+				if (!mergedOrders.some((o) => o.key === order.key)) {
+					mergedOrders.push(order);
+				}
+			});
+		}
 
-		localOrders.forEach((order) => {
-			if (!mergedOrders.some((o) => o.key === order.key)) {
-				mergedOrders.push(order);
-			}
-		});
+		if (localOrders.length !== 0) {
+			localOrders.forEach((order) => {
+				if (!mergedOrders.some((o) => o.key === order.key)) {
+					mergedOrders.push(order);
+				}
+			});
+		}
 
 		orders.set(mergedOrders);
 	}
@@ -109,7 +113,7 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 					ownerID: userData?._id ?? null,
 					isDeleted: false
 				};
-				// orders.push(order);
+				orders.push(order);
 				return orders;
 			});
 
