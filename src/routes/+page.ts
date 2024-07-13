@@ -41,30 +41,11 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 		}
 
 		// Merge the orders
-		const mergedOrders: Order[] = [];
+		const mergedOrders: Order[] = [...serverOrders];
 
-		localOrders.forEach((localOrder) => {
-			let found = false;
-			serverOrders.forEach((serverOrder) => {
-				if (localOrder.key === serverOrder.key) {
-					mergedOrders.push(serverOrder);
-					found = true;
-				}
-			});
-			if (!found) {
-				mergedOrders.push(localOrder);
-			}
-		});
-
-		serverOrders.forEach((serverOrder) => {
-			let found = false;
-			mergedOrders.forEach((mergedOrder) => {
-				if (serverOrder.key === mergedOrder.key) {
-					found = true;
-				}
-			});
-			if (!found) {
-				mergedOrders.push(serverOrder);
+		localOrders.forEach((order) => {
+			if (!mergedOrders.some((o) => o.key === order.key)) {
+				mergedOrders.push(order);
 			}
 		});
 
@@ -122,7 +103,7 @@ export const load: PageLoad = async ({ parent, data, url, fetch }) => {
 					ownerID: userData?._id ?? null,
 					isDeleted: false
 				};
-				orders.push(order);
+				// orders.push(order);
 				return orders;
 			});
 

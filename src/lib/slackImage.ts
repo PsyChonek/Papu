@@ -31,7 +31,7 @@ export async function generateQRCode(participants: Participant[], iban: string):
 		});
 	}
 
-	const width: number = (220 * participants.length) + 10;
+	const width: number = 220 * participants.length + 10;
 	const height: number = 300;
 
 	const combinedBase64Images = await combineBase64Images(qrCodesData, width, height);
@@ -76,10 +76,9 @@ function combineBase64Images(slackImages: SlackImage[], width: number, height: n
 				context.textAlign = 'center';
 				context.fillText(slackImage.name, x + 110, y);
 
-
 				// draw qr code
 				context.drawImage(image, x, y + 20, 210, 200);
-				
+
 				// draw rectangle around qr code rounded
 				const radius = 20;
 
@@ -95,11 +94,11 @@ function combineBase64Images(slackImages: SlackImage[], width: number, height: n
 				context.quadraticCurveTo(x, y + 20 + 200, x, y + 20 + 200 - radius);
 				context.lineTo(x, y + 20 + radius);
 				context.quadraticCurveTo(x, y + 20, x + radius, y + 20);
-	
+
 				context.stroke();
-	
+
 				// draw text
-				context.fillText(slackImage.value.toFixed() + " Kč", x + 110, y + 250);
+				context.fillText(slackImage.value.toFixed() + ' Kč', x + 110, y + 250);
 
 				x += 220;
 
