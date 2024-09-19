@@ -75,7 +75,7 @@
 
 <div class="justify-between min-h-full">
 	<div class="flex flex-col gap-5 basis-full justify-between min-h-full flex-grow-1">
-		<div class="flex flex-col gap-5 basis-fullc">
+		<div class="flex flex-col gap-5 basis-full m-3">
 			<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 				<!-- Payment info  -->
 				<!-- IBAN input -->
@@ -179,6 +179,6 @@
 				</div>
 			</div>
 		</div>
-		<Footer />
+		<!-- <Footer /> -->
 	</div>
 </div>
