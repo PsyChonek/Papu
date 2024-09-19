@@ -40,16 +40,17 @@
 </script>
 
 <div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
-	<button class="rounded-lg bg-orange-400 text-white p-2 w-full" on:click={() => removeParticipant(participant._id)}>Remove</button>
+	<button class="rounded-lg bg-[#f26c6c] text-white p-2 w-full" on:click={() => removeParticipant(participant._id)}>Remove</button>
 	<h1 class="font-bold text-lg">{participant.name}</h1>
 	<!-- Rounded border for canvas -->
-	<div class="outline outline-orange-200 outline-offset-0 rounded-xl">
+	<div class="outline {participant.isToImageExport ? 'outline-[#ff9239]' : 'outline-[#f04b4b]'} outline-offset-0 rounded-xl" role="button" tabindex="0" on:click={() => participant.isToImageExport = !participant.isToImageExport} on:keydown={(e) => e.key === 'Enter' && (participant.isToImageExport = !participant.isToImageExport)}>
 		<!-- QR code on load generate -->
 		<CanvasQrCode data={qrCodeData} />
 	</div>
 	<h1 class="font-bold text-lg"><FunkyNumber value={participant.total} /> Kč</h1>
 	{#each items as { _id, price } (_id)}
 		<MutantTransition>
+
 			<input
 				bind:value={price}
 				on:input={() => {
@@ -57,7 +58,7 @@
 				}}
 				type="number"
 				placeholder="Price"
-				class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+				class="rounded-lg p-2 border-2 border-gray-300 focus:border-[#4a577e] focus:outline-none"
 			/>
 		</MutantTransition>
 	{/each}

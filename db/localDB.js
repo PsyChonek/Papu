@@ -22,11 +22,11 @@ try {
 	exit();
 }
 
-// Check if docker-compose is running
+// Check if compose is running
 try {
-	execSync('docker-compose --version');
+	execSync('docker compose --version');
 } catch (error) {
-	console.log('Docker-compose is not installed!');
+	console.log('docker compose is not installed!');
 	exit();
 }
 
@@ -38,7 +38,7 @@ try {
 	console.log('Error while stopping container! Its okay if its first time running this script!');
 }
 
-// Edit docker-compose.yml file to change ports and login credentials
+// Edit Dockercompose.yml file to change ports and login credentials
 const file = yaml.load(fs.readFileSync('./docker-compose.yml', 'utf8'));
 
 file.services.mongo.ports = [PORTS];
@@ -47,12 +47,12 @@ file.services.mongo.environment.MONGO_INITDB_ROOT_PASSWORD = UserPass;
 file.services.mongo.container_name = containerName;
 
 const setupDatabase = async () => {
-	// Write docker-compose.yml
+	// Write compoDockercomposese.yml
 	fs.writeFileSync('./docker-compose.yml', yaml.dump(file), 'utf8');
 
-	// Start docker-compose and wait for container to run
+	// Start compose and wait for container to run
 	console.log('Starting database...');
-	execSync('docker-compose up -d');
+	execSync('docker compose up -d');
 	for (let i = 0; i < tries; i++) {
 		try {
 			execSync(`docker exec ${containerName} mongo --eval "printjson(db.serverStatus())"`);

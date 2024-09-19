@@ -32,7 +32,8 @@
 			total: 0,
 			nonDiscountedTotal: 0,
 			user: null,
-			items: []
+			items: [],
+			isToImageExport: true
 		};
 
 		activeOrder.participants = [...activeOrder.participants, participant];
@@ -72,21 +73,16 @@
 	}
 </script>
 
-<div class="grid grid-cols-[290px_65%_290px] justify-between min-h-full">
-	<!-- Fixed width -->
-	<div class="w-full overflow-hidden">
-		<LeftSideBar />
-	</div>
-
-	<div class="flex flex-col gap-5 basis-full">
-		<div class="flex flex-col gap-5 basis-full">
+<div class="justify-between min-h-full">
+	<div class="flex flex-col gap-5 basis-full justify-between min-h-full flex-grow-1">
+		<div class="flex flex-col gap-5 basis-fullc">
 			<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
 				<!-- Payment info  -->
 				<!-- IBAN input -->
 				<div class="flex flex-col gap-6 m-2">
 					<div class="flex flex-row items-center justify-evenly gap-6">
 						<h1 class="font-bold mr-auto text-2xl">IBAN</h1>
-						<input type="text" placeholder="IBAN" bind:value={$iban} on:input={formatIban} class="text-center w-60 rounded-lg p-2 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-orange-500 focus:outline-none" />
+						<input type="text" placeholder="IBAN" bind:value={$iban} on:input={formatIban} class="text-center w-60 rounded-lg p-2 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-[#fb923c] focus:outline-none" />
 					</div>
 					<div class="flex flex-row items-center justify-evenly gap-6">
 						<h1 class="font-bold mr-auto text-2xl">Discount</h1>
@@ -99,7 +95,7 @@
 							on:input={() => {
 								$orders = [...$orders];
 							}}
-							class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+							class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
 						/>
 					</div>
 					<div class="flex flex-row items-center justify-evenly gap-6">
@@ -111,18 +107,18 @@
 							on:input={() => {
 								$orders = [...$orders];
 							}}
-							class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+							class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
 						/>
 					</div>
 					<div class="flex flex-row items-center justify-evenly gap-6">
 						<p class="font-bold mr-auto text-2xl">Total</p>
-						<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">
+						<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
 							<FunkyNumber value={total} />
 						</div>
 					</div>
 					<div class="flex flex-row items-center justify-evenly gap-6">
 						<p class="font-bold mr-auto text-2xl">Raw</p>
-						<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none">
+						<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
 							<FunkyNumber value={rawTotal} />
 						</div>
 					</div>
@@ -142,7 +138,7 @@
 					<input
 						type="text"
 						placeholder="Participant name"
-						class="rounded-lg p-2 border-2 border-gray-300 focus:border-orange-500 focus:outline-none"
+						class="rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
 						bind:value={newParticipantName}
 						on:keypress={(e) => {
 							if (e.key === 'Enter') addParticipant();
@@ -155,14 +151,15 @@
 							<p>Loading...</p>
 						{:then generatedImage}
 							<input name="participants" value={generatedImage} />
-							<button type="submit" class="rounded-lg bg-orange-500 text-white p-2 w-60">Send slack message</button>
+							<button type="submit" class="rounded-lg bg-[#fb923c] text-white p-2 w-60">Send slack message</button>
 						{:catch error}
 							<p>Error: {error.message}</p>
 						{/await}
 					</form> -->
 					<!-- Add participant button -->
-					<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-orange-500 text-white p-2 disabled:bg-orange-200">Add participant</button>
-					{#if activeOrder.participants.length > 0}
+					 
+					<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-[#fb923c] text-white p-2 disabled:bg-[#ffc697]">Add participant</button>
+					{#if activeOrder.participants.filter((participant) => participant.isToImageExport).length > 0}
 						{#await slackImage}
 							<p>Loading...</p>
 						{:then generatedImage}
@@ -173,9 +170,8 @@
 									var blob = dataURLToBlob(generatedImage);
 									const item = new ClipboardItem({ 'image/png': blob });
 									navigator.clipboard.write([item]);
-								}}
-								class="rounded-lg bg-orange-500 text-white p-2 w-60">Copy Image to clipboard</button
-							>
+								}
+							} class="rounded-lg bg-[#fb923c] text-white p-2 w-60">Copy Image to clipboard</button>
 						{:catch error}
 							<p>Error: {error.message}</p>
 						{/await}
@@ -183,7 +179,6 @@
 				</div>
 			</div>
 		</div>
-
 		<Footer />
 	</div>
 </div>

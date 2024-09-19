@@ -15,6 +15,7 @@ export interface Participant {
 	total: number;
 	nonDiscountedTotal: number;
 	variableSymbol: string;
+	isToImageExport: boolean;
 }
 
 /* Participant Item, represents an item in the participant's order  */

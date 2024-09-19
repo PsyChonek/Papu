@@ -11,7 +11,9 @@ interface SlackImage {
 export async function generateQRCode(participants: Participant[], iban: string): Promise<string> {
 	let qrCodesData: SlackImage[] = [];
 
-	for (const participant of participants) {
+	let exportParticipants = participants.filter((participant) => participant.isToImageExport);
+
+	for (const participant of exportParticipants) {
 		var data = paymentData(iban, participant.total, `Payment for ${participant.name} from Papu`, participant.variableSymbol);
 
 		// Generate QR code into variable NOT CANVAS
@@ -31,7 +33,7 @@ export async function generateQRCode(participants: Participant[], iban: string):
 		});
 	}
 
-	const width: number = 220 * participants.length + 10;
+	const width: number = (220 * exportParticipants.length) + 10;
 	const height: number = 300;
 
 	const combinedBase64Images = await combineBase64Images(qrCodesData, width, height);
