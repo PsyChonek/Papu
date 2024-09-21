@@ -20,7 +20,7 @@
 
 @layer html {
 	html {
-		background: radial-gradient(circle at right bottom, rgba(197, 95, 141, 0.7), rgba(133, 94, 148, 0.7), rgba(74, 87, 126, 0.7), rgba(47, 72, 88, 0.7) 30%), linear-gradient(135deg, #c55f8d, #855e94, #4a577e, #2f4858);
+		background: radial-gradient(circle at right bottom, rgba(197, 95, 141, 0.4), rgba(133, 94, 148, 0.7), rgba(74, 87, 126, 0.7), rgba(47, 72, 88, 0.7) 110%), linear-gradient(135deg, #c55f8d, #855e94, #4a577e, #2f4858);
 		background-color: #2f4858;
 		background-size: cover;
 		background-repeat: no-repeat;

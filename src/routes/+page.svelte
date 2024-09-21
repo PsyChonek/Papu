@@ -76,7 +76,7 @@
 <div class="justify-between min-h-full">
 	<div class="flex flex-col gap-5 basis-full justify-between min-h-full flex-grow-1">
 		<div class="flex flex-col gap-5 basis-full m-3">
-			<div id="settings" class="rounded-xl bg-gray-100 p-10 m-2 max-w-[460px] mx-auto">
+			<div id="settings" class="rounded-xl bg-gray-100 p-4 m-2 max-w-[460px] mx-auto">
 				<!-- Payment info  -->
 				<!-- IBAN input -->
 				<div class="flex flex-col gap-6 m-2">
@@ -124,8 +124,8 @@
 					</div>
 				</div>
 			</div>
-			<div id="participants" class="rounded-xl bg-gray-100 p-5 m-2 flex flex-wrap flex-col w-max self-center max-w-fit">
-				<div class="flex flex-row justify-center gap-5 m-2 flex-wrap">
+			<div id="participants" class="rounded-xl bg-gray-100 p-4 m-2 flex flex-wrap flex-col w-max self-center max-w-fit">
+				<div class="flex flex-row justify-center gap-5 m-2 flex-wrap" style="display:{activeOrder.participants.length > 0 ? 'flex' : 'none'}">
 					{#each activeOrder.participants as participant (participant._id)}
 						<MutantTransition>
 							<ParticipantInfo bind:participant {split} {removeParticipant} discount={activeOrder.discount} />
@@ -134,7 +134,6 @@
 				</div>
 
 				<div class="m-auto flex flex-col gap-2 max-w-[200px] items-center">
-					<!-- Participant name input -->
 					<input
 						type="text"
 						placeholder="Participant name"
@@ -145,40 +144,29 @@
 						}}
 					/>
 
-					<!-- Test button to send slack message -->
-					<!-- <form method="post" action="?/sendToSlack" class="flex flex-row justify-center gap-5" use:enhance>
-						{#await slackImage}
-							<p>Loading...</p>
-						{:then generatedImage}
-							<input name="participants" value={generatedImage} />
-							<button type="submit" class="rounded-lg bg-[#fb923c] text-white p-2 w-60">Send slack message</button>
-						{:catch error}
-							<p>Error: {error.message}</p>
-						{/await}
-					</form> -->
-					<!-- Add participant button -->
-					 
 					<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-[#fb923c] text-white p-2 disabled:bg-[#ffc697]">Add participant</button>
+
 					{#if activeOrder.participants.filter((participant) => participant.isToImageExport).length > 0}
 						{#await slackImage}
-							<p>Loading...</p>
+							<button class="rounded-lg bg-[#fb923c] text-white p-2 w-60">Copy Image to clipboard </button>
 						{:then generatedImage}
-							<input style="display: none;" name="participants" value={generatedImage} />
 							<button
 								on:click={() => {
-									// Uri to blob and then to clipboard
 									var blob = dataURLToBlob(generatedImage);
 									const item = new ClipboardItem({ 'image/png': blob });
 									navigator.clipboard.write([item]);
-								}
-							} class="rounded-lg bg-[#fb923c] text-white p-2 w-60">Copy Image to clipboard</button>
+								}}
+								class="rounded-lg bg-[#fb923c] text-white p-2 w-60"
+								>Copy Image to clipboard
+							</button>
 						{:catch error}
 							<p>Error: {error.message}</p>
 						{/await}
+					{:else}
+						<button class="rounded-lg bg-[#fb923c] disabled:bg-[#ffc697] text-white p-2 w-60" disabled>No QR code to copy</button>
 					{/if}
 				</div>
 			</div>
 		</div>
-		<!-- <Footer /> -->
 	</div>
 </div>
