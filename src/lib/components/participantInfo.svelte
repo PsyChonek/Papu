@@ -41,12 +41,12 @@
 	$: qrCodeData = $iban && participant.total > 0 ? paymentData($iban, participant.total, `Payment for ${participant.name} from Papu`, participant.variableSymbol) : null;
 </script>
 
-<div class="flex flex-col justify-center items-center gap-2 m-2 w-[196px]">
+<div class="flex flex-col justify-center items-center gap-2 m-2 bg-gray-200 p-2 rounded-lg shadow-md">
 	<div class="flex items-center w-full relative">
 		<h1 class="font-bold text-lg text-center w-full">{participant.name}</h1>
-		<div class="absolute left-0 flex gap-2">
+		<button class="absolute left-0 flex gap-2" on:click={() => participant.isToImageExport = !participant.isToImageExport}>
 			<Fa icon={faPrint} color="{participant.isToImageExport ? '#006550' : '#f04b4b'}" />
-		</div>
+		</button>
 		<div class="absolute right-0 flex gap-2">
 			<button on:click={() => removeParticipant(participant._id)}>
 				<Fa icon={faTrash} color="#f04b4b" />
@@ -54,7 +54,7 @@
 		</div>
 	</div>
 	<!-- Rounded border for canvas -->
-	<div class="outline {participant.isToImageExport ? 'outline-[#006550]' : 'outline-[#f04b4b]'} outline-offset-0 rounded-xl" role="button" tabindex="0" on:click={() => participant.isToImageExport = !participant.isToImageExport} on:keydown={(e) => e.key === 'Enter' && (participant.isToImageExport = !participant.isToImageExport)}>
+	<div class="outline overflow-hidden {participant.isToImageExport ? 'outline-[#006550]' : 'outline-[#f04b4b]'} outline-offset-0 rounded-xl" role="button" tabindex="0" on:click={() => participant.isToImageExport = !participant.isToImageExport} on:keydown={(e) => e.key === 'Enter' && (participant.isToImageExport = !participant.isToImageExport)}>
 		<!-- QR code on load generate -->
 		<CanvasQrCode data={qrCodeData} />
 	</div>

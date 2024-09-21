@@ -8,8 +8,6 @@
 	import { arraySum } from '$lib';
 	import type { Order } from '$lib/types/order';
 	import type { ObjectId } from 'mongodb';
-	import LeftSideBar from '$lib/components/home/leftSideBar.svelte';
-	import Footer from '../lib/components/footer.svelte';
 	import { generateVS } from '$lib/keys';
 
 	let newParticipantName = '';
@@ -75,56 +73,59 @@
 
 <div class="justify-between min-h-full">
 	<div class="flex flex-col gap-5 basis-full justify-between min-h-full flex-grow-1">
-		<div class="flex flex-col gap-5 basis-full m-3">
-			<div id="settings" class="rounded-xl bg-gray-100 p-4 m-2 max-w-[460px] mx-auto">
-				<!-- Payment info  -->
-				<!-- IBAN input -->
-				<div class="flex flex-col gap-6 m-2">
-					<div class="flex flex-row items-center justify-evenly gap-6">
-						<h1 class="font-bold mr-auto text-2xl">IBAN</h1>
-						<input type="text" placeholder="IBAN" bind:value={$iban} on:input={formatIban} class="text-center w-60 rounded-lg p-2 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'}  focus:border-[#fb923c] focus:outline-none" />
-					</div>
-					<div class="flex flex-row items-center justify-evenly gap-6">
-						<h1 class="font-bold mr-auto text-2xl">Discount</h1>
-						<input
-							type="number"
-							min="0"
-							max="100"
-							placeholder="Discount"
-							bind:value={activeOrder.discount}
-							on:input={() => {
-								$orders = [...$orders];
-							}}
-							class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
-						/>
-					</div>
-					<div class="flex flex-row items-center justify-evenly gap-6">
-						<h1 class="font-bold mr-auto text-2xl">Other</h1>
-						<input
-							type="number"
-							placeholder="Other"
-							bind:value={activeOrder.other}
-							on:input={() => {
-								$orders = [...$orders];
-							}}
-							class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
-						/>
-					</div>
-					<div class="flex flex-row items-center justify-evenly gap-6">
-						<p class="font-bold mr-auto text-2xl">Total</p>
-						<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
-							<FunkyNumber value={total} />
+		<div class="flex flex-col gap-1 basis-full m-3">
+			<div id="settings" class="rounded-xl bg-gray-100 p-2 m-2 mx-auto">
+				<div class="flex flex-row items-center justify-start gap-6 m-2">
+					<h1 class="font-bold w-[100px] flex-shrink-0 text-1xl">IBAN</h1>
+					<input type="text" placeholder="IBAN" bind:value={$iban} on:input={formatIban} class="w-full text-center rounded-lg p-1 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'} focus:border-[#fb923c] focus:outline-none" />
+				</div>
+				<div class="flex flex-row items-center justify-evenly gap-6">
+					<div class="flex flex-col gap-6 m-2">
+						<div class="flex flex-row items-center justify-evenly gap-6">
+							<h1 class="font-bold w-[100px] mr-auto text-1xl">Discount</h1>
+							<input
+								type="number"
+								min="0"
+								max="100"
+								placeholder="Discount"
+								bind:value={activeOrder.discount}
+								on:input={() => {
+									$orders = [...$orders];
+								}}
+								class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
+							/>
+						</div>
+						<div class="flex flex-row items-center justify-evenly gap-6">
+							<h1 class="font-bold mr-auto w-[100px] text-1xl">Other</h1>
+							<input
+								type="number"
+								placeholder="Other"
+								bind:value={activeOrder.other}
+								on:input={() => {
+									$orders = [...$orders];
+								}}
+								class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
+							/>
 						</div>
 					</div>
-					<div class="flex flex-row items-center justify-evenly gap-6">
-						<p class="font-bold mr-auto text-2xl">Raw</p>
-						<div class="text-center w-60 rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
-							<FunkyNumber value={rawTotal} />
+
+					<div class="flex flex-col gap-6 m-2">
+						<div class="flex flex-row items-center justify-evenly gap-6">
+							<p class="font-bold mr-auto w-[100px] text-1xl">Total</p>
+							<div class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
+								<FunkyNumber value={total} />
+							</div>
+						</div>
+						<div class="flex flex-row items-center justify-evenly gap-6">
+							<p class="font-bold mr-auto w-[100px] text-1xl">Raw</p>
+							<div class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
+								<FunkyNumber value={rawTotal} />
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="participants" class="rounded-xl bg-gray-100 p-4 m-2 flex flex-wrap flex-col w-max self-center max-w-fit">
+			<div id="participants" class="rounded-xl bg-gray-100 p-2 m-2 flex flex-wrap flex-col w-max self-center max-w-fit">
 				<div class="flex flex-row justify-center gap-5 m-2 flex-wrap" style="display:{activeOrder.participants.length > 0 ? 'flex' : 'none'}">
 					{#each activeOrder.participants as participant (participant._id)}
 						<MutantTransition>
@@ -138,17 +139,23 @@
 						type="text"
 						placeholder="Participant name"
 						class="rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
+						disabled={$iban?.length == 24 ? false : true}
 						bind:value={newParticipantName}
 						on:keypress={(e) => {
 							if (e.key === 'Enter') addParticipant();
 						}}
 					/>
 
-					<button disabled={newParticipantName.length === 0} on:click={() => addParticipant()} class="rounded-lg bg-[#fb923c] text-white p-2 disabled:bg-[#ffc697]">Add participant</button>
+					<button 
+					disabled={newParticipantName.length === 0 || $iban?.length !== 24}
+					on:click={() => addParticipant()} 
+					class="rounded-lg bg-[#fb923c] text-white p-2 disabled:bg-[#ffc697]">
+					Add participant
+					</button>
 
 					{#if activeOrder.participants.filter((participant) => participant.isToImageExport).length > 0}
 						{#await slackImage}
-							<button class="rounded-lg bg-[#fb923c] text-white p-2 w-60">Copy Image to clipboard </button>
+							<button class="rounded-lg bg-[#fb923c] text-white p-2">Copy Image to clipboard </button>
 						{:then generatedImage}
 							<button
 								on:click={() => {
@@ -156,14 +163,14 @@
 									const item = new ClipboardItem({ 'image/png': blob });
 									navigator.clipboard.write([item]);
 								}}
-								class="rounded-lg bg-[#fb923c] text-white p-2 w-60"
-								>Copy Image to clipboard
+								class="rounded-lg bg-[#fb923c] text-white p-2"
+								>Copy QR's to clipboard
 							</button>
 						{:catch error}
 							<p>Error: {error.message}</p>
 						{/await}
 					{:else}
-						<button class="rounded-lg bg-[#fb923c] disabled:bg-[#ffc697] text-white p-2 w-60" disabled>No QR code to copy</button>
+						<button class="rounded-lg bg-[#fb923c] disabled:bg-[#ffc697] text-white p-2" disabled>No QR's to copy</button>
 					{/if}
 				</div>
 			</div>
