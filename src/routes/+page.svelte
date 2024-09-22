@@ -74,29 +74,27 @@
 <div class="justify-between min-h-full">
 	<div class="flex flex-col gap-5 basis-full justify-between min-h-full flex-grow-1">
 		<div class="flex flex-col gap-1 basis-full m-3">
-			<div id="settings" class="rounded-xl bg-gray-100 p-2 m-2 mx-auto">
-				<div class="flex flex-row items-center justify-start gap-6 m-2">
+			<div id="settings" class="rounded-xl bg-gray-100 p-2 m-2 mx-auto flex flex-wrap flex-col">
+				<div class="flex flex-row items-center justify-start gap-6 m-2 no-wrap">
 					<h1 class="font-bold w-[100px] flex-shrink-0 text-1xl">IBAN</h1>
 					<input type="text" placeholder="IBAN" bind:value={$iban} on:input={formatIban} class="w-full text-center rounded-lg p-1 border-2 {$iban?.length == 24 ? 'border-gray-300' : 'border-red-500'} focus:border-[#fb923c] focus:outline-none" />
 				</div>
-				<div class="flex flex-row items-center justify-evenly gap-6">
-					<div class="flex flex-col gap-6 m-2">
-						<div class="flex flex-row items-center justify-evenly gap-6">
-							<h1 class="font-bold w-[100px] mr-auto text-1xl">Discount</h1>
+				<div class="flex flex-row items-center justify-evenly gap-6 flex-wrap sm:flex-nowrap">
+					<div class="flex flex-col gap-6 m-2 w-full sm:w-1/2">
+						<div class="flex flex-row items-center justify-evenly gap-6 no-wrap">
+							<h1 class="font-bold w-[100px] flex-shrink-0 mr-auto text-1xl">Discount</h1>
 							<input
 								type="number"
-								min="0"
-								max="100"
 								placeholder="Discount"
 								bind:value={activeOrder.discount}
 								on:input={() => {
 									$orders = [...$orders];
 								}}
-								class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
+								class="text-center min-w-[100px] w-full rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
 							/>
 						</div>
-						<div class="flex flex-row items-center justify-evenly gap-6">
-							<h1 class="font-bold mr-auto w-[100px] text-1xl">Other</h1>
+						<div class="flex flex-row items-center justify-evenly gap-6 no-wrap">
+							<h1 class="font-bold mr-auto w-[100px] flex-shrink-0 text-1xl">Other</h1>
 							<input
 								type="number"
 								placeholder="Other"
@@ -104,26 +102,27 @@
 								on:input={() => {
 									$orders = [...$orders];
 								}}
-								class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
+								class="text-center min-w-[100px] w-full rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
 							/>
 						</div>
 					</div>
-
-					<div class="flex flex-col gap-6 m-2">
-						<div class="flex flex-row items-center justify-evenly gap-6">
-							<p class="font-bold mr-auto w-[100px] text-1xl">Total</p>
-							<div class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
+				
+					<div class="flex flex-col gap-6 m-2 w-full sm:w-1/2">
+						<div class="flex flex-row items-center justify-evenly gap-6 no-wrap">
+							<p class="font-bold mr-auto w-[100px] flex-shrink-0 text-1xl">Total</p>
+							<div class="text-center w-full rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
 								<FunkyNumber value={total} />
 							</div>
 						</div>
-						<div class="flex flex-row items-center justify-evenly gap-6">
-							<p class="font-bold mr-auto w-[100px] text-1xl">Raw</p>
-							<div class="text-center w-60 rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
+						<div class="flex flex-row items-center justify-evenly gap-6 no-wrap">
+							<p class="font-bold mr-auto w-[100px] flex-shrink-0 text-1xl">Raw</p>
+							<div class="text-center w-full rounded-lg p-1 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none">
 								<FunkyNumber value={rawTotal} />
 							</div>
 						</div>
 					</div>
 				</div>
+				
 			</div>
 			<div id="participants" class="rounded-xl bg-gray-100 p-2 m-2 flex flex-wrap flex-col w-max self-center max-w-fit">
 				<div class="flex flex-row justify-center gap-5 m-2 flex-wrap" style="display:{activeOrder.participants.length > 0 ? 'flex' : 'none'}">
@@ -139,7 +138,6 @@
 						type="text"
 						placeholder="Participant name"
 						class="rounded-lg p-2 border-2 border-gray-300 focus:border-[#fb923c] focus:outline-none"
-						disabled={$iban?.length == 24 ? false : true}
 						bind:value={newParticipantName}
 						on:keypress={(e) => {
 							if (e.key === 'Enter') addParticipant();
